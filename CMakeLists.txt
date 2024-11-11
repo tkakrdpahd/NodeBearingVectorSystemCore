@@ -19,5 +19,6 @@ target_include_directories(NodeBearingVectorSystem PRIVATE
     ${PROJECT_SOURCE_DIR}/module
     ${PROJECT_SOURCE_DIR}/module/Operators
     ${PROJECT_SOURCE_DIR}/module/Vectors
+    ${PROJECT_SOURCE_DIR}/module/Segments
     ${PROJECT_SOURCE_DIR}/module/Server
 )
