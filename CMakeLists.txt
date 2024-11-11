@@ -17,5 +17,6 @@ add_executable(NodeBearingVectorSystem ${SOURCES})
 # Include directories
 target_include_directories(NodeBearingVectorSystem PRIVATE
     ${PROJECT_SOURCE_DIR}/module
+    ${PROJECT_SOURCE_DIR}/module/Operators
     ${PROJECT_SOURCE_DIR}/module/Vectors
 )

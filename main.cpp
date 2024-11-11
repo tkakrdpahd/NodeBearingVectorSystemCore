@@ -7,43 +7,45 @@
  */
 
 #include <iostream>
-#include "Vector3.h"
+#include <cmath>
+#include "CoordinateConverter.h"
+#include "Vector3.h"  // Include Vector3.h
 
 int main() {
-    // Create two Vector3 instances for testing
-    Vector3 v1(3.0f, 4.0f, 5.0f);
-    Vector3 v2(1.0f, 2.0f, 3.0f);
+    // Constants for degrees to radians conversion
+    const float DEG_TO_RAD = M_PI / 180.0f;
 
-    // Test vector addition
-    Vector3 v_add = v1 + v2;
-    std::cout << "v1 + v2 = (" << v_add.x << ", " << v_add.y << ", " << v_add.z << ")\n";
+    // Test case 1: Convert spherical to Cartesian coordinates
+    Vector3 spherical(1.0f, 45.0f * DEG_TO_RAD, 45.0f * DEG_TO_RAD);  // r = 1, theta = 45°, phi = 45°
+    Vector3 cartesian = CoordinateConverter::sphericalToCartesian(spherical);
 
-    // Test vector subtraction
-    Vector3 v_sub = v1 - v2;
-    std::cout << "v1 - v2 = (" << v_sub.x << ", " << v_sub.y << ", " << v_sub.z << ")\n";
+    std::cout << "Spherical to Cartesian:" << std::endl;
+    std::cout << "Input Spherical (r=1, theta=45°, phi=45°):" << std::endl;
+    std::cout << "Converted Cartesian (x, y, z): (" << cartesian.x << ", " << cartesian.y << ", " << cartesian.z << ")\n";
 
-    // Test scalar multiplication
-    Vector3 v_mul = v1 * 2.0f;
-    std::cout << "v1 * 2.0 = (" << v_mul.x << ", " << v_mul.y << ", " << v_mul.z << ")\n";
+    // Expected Cartesian values (approximately)
+    std::cout << "Expected Cartesian (x, y, z): (0.5, 0.5, 0.7071)\n";
+    std::cout << "Conversion successful: "
+              << (CoordinateConverter::nearlyEqual(cartesian.x, 0.5f) &&
+                  CoordinateConverter::nearlyEqual(cartesian.y, 0.5f) &&
+                  CoordinateConverter::nearlyEqual(cartesian.z, 0.7071f))
+              << "\n\n";
 
-    // Test scalar division
-    Vector3 v_div = v1 / 2.0f;
-    std::cout << "v1 / 2.0 = (" << v_div.x << ", " << v_div.y << ", " << v_div.z << ")\n";
+    // Test case 2: Convert Cartesian to spherical coordinates
+    Vector3 cartesian2(1.0f, 1.0f, 1.0f);
+    Vector3 spherical2 = CoordinateConverter::cartesianToSpherical(cartesian2);
 
-    // Test dot product
-    float dot_product = v1.dot(v2);
-    std::cout << "v1 . v2 = " << dot_product << "\n";
+    std::cout << "Cartesian to Spherical:" << std::endl;
+    std::cout << "Input Cartesian (x=1, y=1, z=1):" << std::endl;
+    std::cout << "Converted Spherical (r, theta, phi): (" << spherical2.x << ", " << spherical2.y << ", " << spherical2.z << ")\n";
 
-    // Test cross product
-    Vector3 v_cross = v1.cross(v2);
-    std::cout << "v1 x v2 = (" << v_cross.x << ", " << v_cross.y << ", " << v_cross.z << ")\n";
-
-    // Test magnitude
-    float v1_magnitude = v1.magnitude();
-    std::cout << "|v1| = " << v1_magnitude << "\n";
-
-    // Test element access using operator[]
-    std::cout << "v1[0] = " << v1[0] << ", v1[1] = " << v1[1] << ", v1[2] = " << v1[2] << "\n";
+    // Expected Spherical values (approximately)
+    std::cout << "Expected Spherical (r, theta, phi): (1.732, 0.7854, 0.9553)\n";
+    std::cout << "Conversion successful: "
+              << (CoordinateConverter::nearlyEqual(spherical2.x, 1.732f) &&
+                  CoordinateConverter::nearlyEqual(spherical2.y, 0.7854f) &&
+                  CoordinateConverter::nearlyEqual(spherical2.z, 0.9553f))
+              << "\n";
 
     return 0;
 }
