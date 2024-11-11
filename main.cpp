@@ -8,13 +8,13 @@
 
 #include <iostream>
 #include <cmath>
-#include "CoordinateConverter.h"
+
 #include "Vector3.h"
+#include "CoordinateConverter.h"
 #include "NodeVector.h"
 #include "BearingVector.h"
 #include "SocketServer.h"
 
-// Socket 서버 테스트 함수로 AttributesManager의 데이터를 반환하게 함
 void SocketServerTest() {
     int serverPort = 8080;
     SocketServer server(serverPort);
