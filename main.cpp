@@ -9,89 +9,143 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <thread>
 
 #include "Vector3.h"
 #include "CoordinateConverter.h"
 #include "NodeVector.h"
 #include "BearingVector.h"
 #include "LinerSegment.h"
+#include "AttributesManager.h"
+#include "SocketServer.h"
+
+// 전역 변수 선언
+AttributesManager attributesManager;
+
+// 테스트 함수들
+void NodeVectorTest(AttributesManager& _attributesManager) {
+    // 여러 개의 SphericalNodeVector 생성 및 NodeVector 초기화 (PI 단위 사용)
+    Vector3 sphericalCoords1(10.0f, static_cast<float>(M_PI / 2), static_cast<float>(M_PI / 4)); // r, theta, phi
+    Vector3 sphericalCoords2(15.0f, static_cast<float>(M_PI / 4), static_cast<float>(M_PI / 2)); // r, theta, phi
+
+    // SphericalNodeVector 생성자 호출: (int, Vector3)
+    SphericalNodeVector sphericalNode1(1, sphericalCoords1);
+    SphericalNodeVector sphericalNode2(2, sphericalCoords2);
+
+    // NodeVector 생성자 호출 (SphericalNodeVector 사용)
+    NodeVector node01(sphericalNode1);
+    NodeVector node02(sphericalNode2);
+
+    // AttributesManager를 사용하여 NodeVector 생성 및 저장
+    _attributesManager.CreateNodeVector(node01);
+    _attributesManager.CreateNodeVector(node02);
+}
+
+void BearingVectorTest(AttributesManager& _attributesManager) {
+    // Bearing Vector 생성 및 초기화
+    const auto& storedNodes = _attributesManager.getNodeVectors();
+    if (storedNodes.empty()) {
+        std::cerr << "No nodes available for creating BearingVectors." << std::endl;
+        return;
+    }
+
+    // 첫 번째 노드를 사용하여 BearingVectors 생성
+    NodeVector node = storedNodes[0];
+
+    // Create a BearingVector
+    int bearingIndex = 1;
+    // Angles vector: angles.x = depth, angles.y = phi_i, angles.z = theta_i
+    // Let's set depth = 0.5, phi = 30°, theta = 60°
+    Vector3 bearingAngles(0.5f, 30.0f * 180, 60.0f * 180);
+    // Force vector components
+    Vector3 bearingForce(10.0f, 5.0f, 2.0f);
+
+    BearingVector bearingVector1(bearingIndex, node, bearingAngles, bearingForce);
+
+    // AttributesManager를 사용하여 BearingVector 생성 및 저장
+    _attributesManager.CreateBearingVector(bearingVector1);
+}
+
+void LinerSegmentTest(AttributesManager& _attributesManager) {
+    // NodeVectorWithBearing 초기화
+    NodeVectorWithBearing node1;
+    NodeVectorWithBearing node2;
+
+    // AttributesManager에서 NodeVector와 해당 인덱스에 맞는 BearingVector 가져오기
+    const auto& storedNodes = _attributesManager.getNodeVectors();
+    const auto& storedBearings = _attributesManager.getBearingVectors();
+
+    if (storedNodes.size() >= 2) {
+        node1.node = storedNodes[0];
+        node2.node = storedNodes[1];
+
+        // Node 1과 Node 2에 해당하는 BearingVectors 추가
+        for (const auto& bearing : storedBearings) {
+            if (bearing.getNodeIndex() == node1.node.getSphericalNodeVector().index) {
+                node1.bearings.push_back(bearing);
+                std::cout << "Bearing vector added to Node 1, Node Index: " << node1.node.getSphericalNodeVector().index << std::endl;
+            } else if (bearing.getNodeIndex() == node2.node.getSphericalNodeVector().index) {
+                node2.bearings.push_back(bearing);
+                std::cout << "Bearing vector added to Node 2, Node Index: " << node2.node.getSphericalNodeVector().index << std::endl;
+            }
+        }
+
+        // Bearing Vector가 잘 추가되었는지 확인
+        std::cout << "Node 1 bearing vectors count: " << node1.bearings.size() << std::endl;
+        std::cout << "Node 2 bearing vectors count: " << node2.bearings.size() << std::endl;
+
+        // LinerSegment 생성 및 AttributesManager에 추가
+        LinerSegment linerSegment(node1, node2, 50);
+
+        // AttributesManager를 사용하여 LinerSegment 생성 및 저장
+        _attributesManager.CreateLinerSegment(linerSegment);
+
+        // LinerSegment의 샘플링된 점 출력
+        linerSegment.samplingBezierCurve(); // 함수 이름 변경됨
+        const auto& sampledPoints = linerSegment.getSampledPoints();
+        if (!sampledPoints.empty()) {
+            std::cout << "Sampled Points from LinerSegment:" << std::endl;
+            for (const auto& point : sampledPoints) {
+                std::cout << "(x: " << point.x << ", y: " << point.y << ", z: " << point.z << ")" << std::endl;
+            }
+        } else {
+            std::cout << "No sampled points generated from LinerSegment." << std::endl;
+        }
+    } else {
+        std::cout << "Not enough NodeVectors in AttributesManager to create a LinerSegment." << std::endl;
+    }
+}
+
+void AttributesManagerTest(AttributesManager& _attributesManager) {
+    // NodeVectorTest 함수를 호출하여 NodeVector 생성 및 저장
+    NodeVectorTest(_attributesManager);
+
+    // BearingVectorTest 함수를 호출하여 BearingVector 생성 및 저장
+    BearingVectorTest(_attributesManager);
+
+    // LinerSegmentTest 함수를 호출하여 LinerSegment 생성 및 저장
+    LinerSegmentTest(_attributesManager);
+}
+
+// Socket 서버 테스트 함수로 AttributesManager의 데이터를 반환하게 함
+void SocketServerTest(AttributesManager& attributesManager) {
+    int serverPort = 8080;
+    SocketServer server(serverPort, attributesManager);
+
+    if (server.startServer()) {
+        server.listenForClients();
+    } else {
+        std::cerr << "Failed to start the server." << std::endl;
+    }
+}
 
 int main() {
-    // Constants for degrees to radians conversion
-    const float DEG_TO_RAD = M_PI / 180.0f;
+    // 테스트 함수 호출 (데이터 추가)
+    AttributesManagerTest(attributesManager);
 
-    // **Step 1: Create NodeVectors**
-
-    // Node 1 at position (1, 1, 1) in Cartesian coordinates
-    Vector3 node1CartesianCoords(1.0f, 1.0f, 1.0f);
-    CartesianNodeVector cnv1(1, node1CartesianCoords);
-    NodeVector node1(cnv1);
-
-    // Node 2 at position (5, 5, 5) in Cartesian coordinates
-    Vector3 node2CartesianCoords(5.0f, 5.0f, 5.0f);
-    CartesianNodeVector cnv2(2, node2CartesianCoords);
-    NodeVector node2(cnv2);
-
-    // **Step 2: Create BearingVectors for each Node**
-
-    // BearingVector for Node 1
-    int bearingIndex1 = 1;
-    // Angles vector: angles.x = depth, angles.y = phi_i, angles.z = theta_i
-    Vector3 bearingAngles1(1.0f, 45.0f * DEG_TO_RAD, 30.0f * DEG_TO_RAD); // depth, phi, theta
-    Vector3 bearingForce1(2.0f, 2.0f, 2.0f);
-    BearingVector bearingVector1(bearingIndex1, node1, bearingAngles1, bearingForce1);
-
-    // BearingVector for Node 2
-    int bearingIndex2 = 2;
-    Vector3 bearingAngles2(1.0f, 60.0f * DEG_TO_RAD, 45.0f * DEG_TO_RAD);
-    Vector3 bearingForce2(3.0f, 3.0f, 3.0f);
-    BearingVector bearingVector2(bearingIndex2, node2, bearingAngles2, bearingForce2);
-
-    // **Step 3: Create NodeVectorWithBearing instances**
-
-    // Node 1 with its bearings
-    NodeVectorWithBearing nodeWithBearing1;
-    nodeWithBearing1.node = node1;
-    nodeWithBearing1.bearings.push_back(bearingVector1);
-
-    // Node 2 with its bearings
-    NodeVectorWithBearing nodeWithBearing2;
-    nodeWithBearing2.node = node2;
-    nodeWithBearing2.bearings.push_back(bearingVector2);
-
-    // **Step 4: Create a LinerSegment**
-
-    float lod = 50.0f;    // Level of Detail
-    float alphaVal = 0.5f; // Blending factor
-
-    LinerSegment linerSegment(nodeWithBearing1, nodeWithBearing2, lod, alphaVal);
-
-    // **Step 5: Access and Output Sampled Points**
-
-    const std::vector<Vector3>& sampledPoints = linerSegment.getSampledPoints();
-
-    std::cout << "Sampled Points along the Bezier Curve:\n";
-    for (size_t i = 0; i < sampledPoints.size(); ++i) {
-        const Vector3& pt = sampledPoints[i];
-        std::cout << "Point " << i << ": (" << pt.x << ", " << pt.y << ", " << pt.z << ")\n";
-    }
-
-    // **Optional: Output Control Points**
-
-    const std::vector<Vector3>& controlPoints = linerSegment.getControlPoints();
-
-    std::cout << "\nControl Points for the Bezier Curve:\n";
-    for (size_t i = 0; i < controlPoints.size(); ++i) {
-        const Vector3& cp = controlPoints[i];
-        std::cout << "Control Point " << i << ": (" << cp.x << ", " << cp.y << ", " << cp.z << ")\n";
-    }
-
-    // **Step 6: Retrieve and Output LinerSegmentData**
-
-    LinerSegmentData segmentData = linerSegment.returnLinerSegmentData();
-    std::cout << "\nLinerSegment Data:\n";
-    std::cout << "Level of Detail: " << segmentData.levelOfDetail << "\n";
-    std::cout << "Alpha: " << segmentData.alpha << "\n";
+    // 서버를 실행하여 클라이언트 요청에 응답 (별도의 스레드)
+    std::thread serverThread(SocketServerTest, std::ref(attributesManager));
+    serverThread.join(); // 서버 스레드가 종료될 때까지 메인 스레드가 대기
 
     return 0;
 }
