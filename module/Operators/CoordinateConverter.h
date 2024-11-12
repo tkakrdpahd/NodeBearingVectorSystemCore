@@ -1,8 +1,10 @@
-/* CoordinateConverter.h
+/**
+ * CoordinateConverter.h
  * Linked file: CoordinateConverter.cpp
  * Security: Confidential
  * Author: Minseok Doo
  * Date: Oct 7, 2024
+ * Last Modified: Nov 11, 2024
  * 
  * Purpose of Class:
  * Conversion between spherical coordinates and Cartesian coordinates using Vector3

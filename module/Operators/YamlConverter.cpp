@@ -1,8 +1,10 @@
-/* YamlConverter.cpp
+/**
+ * YamlConverter.cpp
  * Implementation of the YamlConverter class
  * Security: Top Secret
  * Author: Minseok Doo
  * Date: Oct 20, 2024
+ * Last Modified: Nov 11, 2024
  */
 
 #include "YamlConverter.h"
@@ -62,9 +64,9 @@ std::string YamlConverter::ToString(const AttributesManager &attributesManager) 
 
         auto force = bearing.getForce();
         out << YAML::Key << "force" << YAML::BeginMap;
-        out << YAML::Key << "f_x" << YAML::Value << force.force.x;    // 수정됨
-        out << YAML::Key << "f_y" << YAML::Value << force.force.y;    // 수정됨
-        out << YAML::Key << "f_z" << YAML::Value << force.force.z;    // 수정됨
+        out << YAML::Key << "f_x" << YAML::Value << force.force.x;
+        out << YAML::Key << "f_y" << YAML::Value << force.force.y;
+        out << YAML::Key << "f_z" << YAML::Value << force.force.z;
         out << YAML::EndMap;
 
         out << YAML::EndMap;
@@ -108,14 +110,14 @@ std::string YamlConverter::ToString(const AttributesManager &attributesManager) 
         auto cartesianEnd = segmentData.nodeEnd.getCartesianNodeVector();
         out << YAML::Key << "index" << YAML::Value << sphericalEnd.index;
         out << YAML::Key << "spherical" << YAML::BeginMap;
-        out << YAML::Key << "r" << YAML::Value << sphericalEnd.sphericalCoords.x;         // 수정됨
-        out << YAML::Key << "theta" << YAML::Value << sphericalEnd.sphericalCoords.y;     // 수정됨
-        out << YAML::Key << "phi" << YAML::Value << sphericalEnd.sphericalCoords.z;       // 수정됨
+        out << YAML::Key << "r" << YAML::Value << sphericalEnd.sphericalCoords.x;
+        out << YAML::Key << "theta" << YAML::Value << sphericalEnd.sphericalCoords.y;
+        out << YAML::Key << "phi" << YAML::Value << sphericalEnd.sphericalCoords.z;
         out << YAML::EndMap;
         out << YAML::Key << "cartesian" << YAML::BeginMap;
-        out << YAML::Key << "x" << YAML::Value << cartesianEnd.cartesianCoords.x;           // 수정됨
-        out << YAML::Key << "y" << YAML::Value << cartesianEnd.cartesianCoords.y;           // 수정됨
-        out << YAML::Key << "z" << YAML::Value << cartesianEnd.cartesianCoords.z;           // 수정됨
+        out << YAML::Key << "x" << YAML::Value << cartesianEnd.cartesianCoords.x;
+        out << YAML::Key << "y" << YAML::Value << cartesianEnd.cartesianCoords.y;
+        out << YAML::Key << "z" << YAML::Value << cartesianEnd.cartesianCoords.z;
         out << YAML::EndMap;
         out << YAML::EndMap;
 

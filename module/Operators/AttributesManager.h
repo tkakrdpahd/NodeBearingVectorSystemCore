@@ -1,8 +1,10 @@
-/* AttributesManager.h
+/**
+ * AttributesManager.h
  * Linked file: AttributesManager.cpp
  * Security: Top Secret
  * Author: Minseok Doo
  * Date: Oct 13, 2024
+ * Last Modified: Nov 11, 2024
  * 
  * Purpose: Manage Vector Attributes
  */
