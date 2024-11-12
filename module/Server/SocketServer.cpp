@@ -4,18 +4,18 @@
  * Date: Oct 20, 2024
  * 
  * Purpose of Class
- * Open & Manage Socket Server
+ * 
  */
 
+#include "SocketServer.h"
+#include "YamlConverter.h"
 #include <iostream>
 #include <unistd.h>
 #include <cstring>
 #include <thread>
 
-#include "SocketServer.h"
-
-SocketServer::SocketServer(int serverPort)
-    : serverPort(serverPort), serverSocketFd(-1) {
+SocketServer::SocketServer(int serverPort, AttributesManager& attrManager)
+    : serverPort(serverPort), serverSocketFd(-1), attributesManager_(attrManager) {
     memset(&serverAddr, 0, sizeof(serverAddr));
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_addr.s_addr = INADDR_ANY;
@@ -45,6 +45,44 @@ bool SocketServer::startServer() {
 
     std::cout << "Server started and listening on port " << serverPort << std::endl;
     return true;
+}
+
+void SocketServer::listenForClients() {
+    struct sockaddr_in clientAddr;
+    socklen_t clientAddrLen = sizeof(clientAddr);
+    while (true) {
+        int clientSocket = accept(serverSocketFd, (struct sockaddr*)&clientAddr, &clientAddrLen);
+        if (clientSocket < 0) {
+            std::cerr << "Failed to accept client connection." << std::endl;
+            continue;
+        }
+        std::cout << "Client connected." << std::endl;
+
+        std::thread([this, clientSocket]() {
+            char buffer[1024] = {0};
+            while (true) {
+                int bytesRead = read(clientSocket, buffer, 1024);
+                if (bytesRead <= 0) {
+                    std::cerr << "Client disconnected or error occurred." << std::endl;
+                    close(clientSocket);
+                    break;
+                }
+                std::cout << "Received: " << buffer << std::endl;
+
+                if (std::string(buffer) == "call_attributes_manager") {
+                    // 기존 AttributesManager를 사용
+                    std::string response = YamlConverter().ToString(attributesManager_);
+                    sendResponse(clientSocket, response);
+                } else {
+                    sendResponse(clientSocket, "Unknown command received.");
+                }
+            }
+        }).detach();
+    }
+}
+
+void SocketServer::sendResponse(int clientSocket, const std::string& message) {
+    send(clientSocket, message.c_str(), message.size(), 0);
 }
 
 void SocketServer::closeServer() {
