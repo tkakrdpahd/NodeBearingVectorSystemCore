@@ -28,6 +28,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/module/Vectors
     ${PROJECT_SOURCE_DIR}/module/Segments
     ${PROJECT_SOURCE_DIR}/module/Server
+    ${PROJECT_SOURCE_DIR}/module/imgui
 )
 
 # Link yaml-cpp library using the correct target name
