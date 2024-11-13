@@ -9,3 +9,19 @@
  * Purpose:
  * /api GET, POST, PUT, DELETE
  */
+
+#include "GetAllData.h"
+
+class EventManager {
+    private:
+        /* data */
+    public:
+        EventManager(/* args */);
+        ~EventManager();
+};
+
+EventManager::EventManager(/* args */) {
+}
+
+EventManager::~EventManager() {
+}

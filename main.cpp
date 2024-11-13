@@ -13,6 +13,9 @@
 #include "SocketManager.h"
 
 int main() {
+    
+    std::cout << "Hello, World!!!" << std::endl;
+
     // Create SceneManager instance; std::shared_ptr
         // Load operators modules
     // Create ObjectManager instance refer to SceneManager instance
@@ -27,8 +30,6 @@ int main() {
     // Call interfaces
         // Call menu
         // Call simulator
-    
-    std::cout << "Hello, World!!!" << std::endl;
 
     SocketManager server;
 
