@@ -51,24 +51,23 @@
 
 #include "Vector3.h"
 #include "NodeVector.h"
+#include <ostream>
 
 class BearingVector {
 private:
-    /* data */
-    NodeVector node; // Node vector
+    NodeVector node;
 public:
-    int index; // Node vector index
-    Vector3 force; // Force vector (Fx, Fy, Fz)
-    Vector3 vector; // Angles Vector3 where x = depth, y = phi_i, z = theta_i
+    int index;
+    Vector3 force;
+    Vector3 vector;
 
-    BearingVector(/* args */);
+    BearingVector(int idx, const NodeVector& nd, const Vector3& frc, const Vector3& vec);
     ~BearingVector();
-};
 
-BearingVector::BearingVector(/* args */) {
-};
-
-BearingVector::~BearingVector() {
+    friend std::ostream& operator<<(std::ostream& os, const BearingVector& bearing) {
+        os << "Index: " << bearing.index << ", Force: " << bearing.force << ", Vector: " << bearing.vector;
+        return os;
+    }
 };
 
 #endif // BEARINGVECTOR_H

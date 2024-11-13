@@ -12,7 +12,7 @@
 #ifndef SERVERMANAGER_H
 #define SERVERMANAGER_H
 
-#include "socketManager.h"
-#include "eventManager.h"
+#include "SocketManager.h"
+#include "EventManager.h"
 
 #endif // SERVERMANAGER_H

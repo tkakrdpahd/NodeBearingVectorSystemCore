@@ -8,8 +8,7 @@
 
 #include <iostream>
 
-#include "Vector3.h"
-#include "NodeVector.h"
+#include "ObjectManager.h"
 
 int main() {
     // Create SceneManager instance; std::shared_ptr
@@ -29,11 +28,13 @@ int main() {
     
     std::cout << "Hello, World!!!" << std::endl;
 
-    Vector3 vector;
-    NodeVector nodeVector;
+ObjectManager manager;
 
-    std::cout << vector << std::endl;
-    std::cout << nodeVector << std::endl;
+    auto node = manager.CreateNodeVector(1, Vector3(1.0f, 2.0f, 3.0f));
+    auto bearing = manager.CreateBearingVector(2, node, Vector3(5.0f, 5.0f, 5.0f), Vector3(0.5f, 0.8f, 1.2f));
+
+    std::cout << *node << std::endl;
+    std::cout << *bearing << std::endl;
 
     return 0;
 }

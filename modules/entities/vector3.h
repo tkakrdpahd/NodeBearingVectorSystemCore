@@ -9,6 +9,7 @@
 #ifndef VECTOR3_H
 #define VECTOR3_H
 
+#include <iostream>
 #include <cmath>  // Required for the sqrt() function
 
 // Vector3 class with public member variables and methods
