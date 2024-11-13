@@ -7,8 +7,10 @@
  */
 
 #include <iostream>
+#include <thread>
 
 #include "ObjectManager.h"
+#include "SocketManager.h"
 
 int main() {
     // Create SceneManager instance; std::shared_ptr
@@ -27,6 +29,15 @@ int main() {
         // Call simulator
     
     std::cout << "Hello, World!!!" << std::endl;
+
+    SocketManager server;
+
+    // 멤버 함수 ListenForClients를 람다로 감싸서 실행
+    std::thread serverThread([&server]() {
+        server.ListenForClients();
+    });
+
+    serverThread.join(); // 메인 쓰레드에서 서버 쓰레드 대기
 
     ObjectManager obj1;
 

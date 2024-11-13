@@ -18,6 +18,8 @@ file(GLOB_RECURSE SOURCES
     "main.cpp"
     "modules/*.cpp"
     "modules/**/*.cpp"
+    "server/*.cpp"
+    "server/**/*.cpp"
     "services/*.cpp"
     "services/**/*.cpp"
 )

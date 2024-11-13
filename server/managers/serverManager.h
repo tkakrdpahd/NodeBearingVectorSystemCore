@@ -15,4 +15,19 @@
 #include "SocketManager.h"
 #include "EventManager.h"
 
+class ServerManager {
+    private:
+        /* data */
+    public:
+        ServerManager(/* args */);
+        ~ServerManager();
+};
+
+ServerManager::ServerManager(/* args */) {
+}
+
+ServerManager::~ServerManager() {
+}
+
+
 #endif // SERVERMANAGER_H
