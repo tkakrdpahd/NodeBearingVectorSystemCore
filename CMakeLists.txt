@@ -8,7 +8,7 @@ project(NodeBearingVectorSystem VERSION 1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Find yaml-cpp package
+# Find package
 find_package(yaml-cpp REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
@@ -38,13 +38,21 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${IMGUI_BACKEND_SOURCES})
 
 # Include directories
 target_include_directories(${PROJECT_NAME} PRIVATE
-    ${PROJECT_SOURCE_DIR}/module
-    ${PROJECT_SOURCE_DIR}/module/Operators
-    ${PROJECT_SOURCE_DIR}/module/Vectors
-    ${PROJECT_SOURCE_DIR}/module/Segments
-    ${PROJECT_SOURCE_DIR}/module/Server
-    ${PROJECT_SOURCE_DIR}/imgui
-    ${PROJECT_SOURCE_DIR}/imgui/backends
+
+    ${PROJECT_SOURCE_DIR}/modules
+    ${PROJECT_SOURCE_DIR}/modules/entities
+    ${PROJECT_SOURCE_DIR}/modules/operators
+    ${PROJECT_SOURCE_DIR}/modules/segments
+    ${PROJECT_SOURCE_DIR}/modules/vectors
+
+    ${PROJECT_SOURCE_DIR}/server
+    ${PROJECT_SOURCE_DIR}/server/api
+    ${PROJECT_SOURCE_DIR}/server/dto
+    ${PROJECT_SOURCE_DIR}/server/managers
+
+    ${PROJECT_SOURCE_DIR}/services
+    ${PROJECT_SOURCE_DIR}/services/interfaces
+    ${PROJECT_SOURCE_DIR}/services/managers
 )
 
 # Link yaml-cpp library using the correct target name
