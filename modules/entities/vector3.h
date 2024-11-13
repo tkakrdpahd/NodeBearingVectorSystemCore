@@ -11,14 +11,21 @@
 
 #include <cmath>  // Required for the sqrt() function
 
-// Simple Vector3 struct using an internal array
-struct Vector3 {
+// Vector3 class with public member variables and methods
+class Vector3 {
+public:
     union {
         float values[3];  // Internal storage as an array
         struct {          // Retains x, y, z members
             float x, y, z;
         };
     };
+    
+    // << 연산자 오버로딩
+    friend std::ostream& operator<<(std::ostream& os, const Vector3& vec) {
+        os << "(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
+        return os;
+    }
 
     // Constructor with default values
     Vector3(float xVal = 0, float yVal = 0, float zVal = 0) {

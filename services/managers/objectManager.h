@@ -10,3 +10,21 @@
  * CRUD Vector Attributes
  */
 
+#include "NodeVector.h"
+#include "BearingVector.h"
+#include "LinerSegment.h"
+#include "SurfaceSegment.h"
+
+class ObjectManager {
+    private:
+        /* data */
+    public:
+        ObjectManager(/* args */);
+        ~ObjectManager();
+};
+
+ObjectManager::ObjectManager(/* args */) {
+}
+
+ObjectManager::~ObjectManager() {
+}

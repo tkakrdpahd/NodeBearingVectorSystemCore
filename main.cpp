@@ -8,6 +8,9 @@
 
 #include <iostream>
 
+#include "Vector3.h"
+#include "NodeVector.h"
+
 int main() {
     // Create SceneManager instance; std::shared_ptr
         // Load operators modules
@@ -23,5 +26,14 @@ int main() {
     // Call interfaces
         // Call menu
         // Call simulator
+    
+    std::cout << "Hello, World!!!" << std::endl;
+
+    Vector3 vector;
+    NodeVector nodeVector;
+
+    std::cout << vector << std::endl;
+    std::cout << nodeVector << std::endl;
+
     return 0;
 }

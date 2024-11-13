@@ -18,4 +18,27 @@
 
 #include "Vector3.h"
 
+class NodeVector {
+private:
+    /* data */
+public:
+    int index;
+    Vector3 vector;
+
+    // << 연산자 오버로딩
+    friend std::ostream& operator<<(std::ostream& os, const NodeVector& node) {
+        os << "Index: " << node.index << ", Vector: " << node.vector;
+        return os;
+    }
+    
+    NodeVector(/* args */);
+    ~NodeVector();
+};
+
+NodeVector::NodeVector(/* args */) {
+};
+
+NodeVector::~NodeVector() {
+};
+
 #endif // NODEVECTOR_H
