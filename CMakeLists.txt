@@ -38,7 +38,8 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${IMGUI_BACKEND_SOURCES})
 
 # Include directories
 target_include_directories(${PROJECT_NAME} PRIVATE
-
+    ${PROJECT_SOURCE_DIR}/imgui
+    
     #${PROJECT_SOURCE_DIR}/modules
     ${PROJECT_SOURCE_DIR}/modules/entities
     ${PROJECT_SOURCE_DIR}/modules/operators
