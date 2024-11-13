@@ -26,6 +26,8 @@ private:
     std::vector<std::shared_ptr<NodeVector>> _nodeVectors;
     std::vector<std::shared_ptr<BearingVector>> _bearingVectors;
 
+    // Retrieve NodeVector by index
+    std::optional<std::shared_ptr<NodeVector>> GetNodeVectorByIndex(int index) const;
 public:
     ObjectManager();
     ~ObjectManager();
@@ -35,10 +37,6 @@ public:
 
     // Create and store a BearingVector using NodeVector's index
     std::shared_ptr<BearingVector> CreateBearingVector(int nodeIndex, const Vector3& force, const Vector3& vector);
-
-private:
-    // Retrieve NodeVector by index
-    std::optional<std::shared_ptr<NodeVector>> GetNodeVectorByIndex(int index) const;
 };
 
 #endif // OBJECTMANAGER_H

@@ -18,6 +18,16 @@ ObjectManager::~ObjectManager() {
     std::cout << "ObjectManager is being destroyed. Cleaning up resources." << std::endl;
 }
 
+// Retrieve NodeVector by index
+std::optional<std::shared_ptr<NodeVector>> ObjectManager::GetNodeVectorByIndex(int index) const {
+    for (const auto& node : _nodeVectors) {
+        if (node->index == index) {
+            return node; // Found NodeVector with the specified index
+        }
+    }
+    return std::nullopt; // Return empty optional if index not found
+}
+
 // Create and store a NodeVector
 std::shared_ptr<NodeVector> ObjectManager::CreateNodeVector(int index, const Vector3& vector) {
     auto node = std::make_shared<NodeVector>(index, vector);
@@ -38,14 +48,4 @@ std::shared_ptr<BearingVector> ObjectManager::CreateBearingVector(int nodeIndex,
         std::cerr << "NodeVector with index " << nodeIndex << " not found." << std::endl;
         return nullptr;
     }
-}
-
-// Retrieve NodeVector by index
-std::optional<std::shared_ptr<NodeVector>> ObjectManager::GetNodeVectorByIndex(int index) const {
-    for (const auto& node : _nodeVectors) {
-        if (node->index == index) {
-            return node; // Found NodeVector with the specified index
-        }
-    }
-    return std::nullopt; // Return empty optional if index not found
 }
