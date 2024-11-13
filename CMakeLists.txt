@@ -18,6 +18,8 @@ file(GLOB_RECURSE SOURCES
     "main.cpp"
     "modules/*.cpp"
     "modules/**/*.cpp"
+    "services/*.cpp"
+    "services/**/*.cpp"
 )
 
 # 필요한 ImGui 백엔드 파일만 포함
