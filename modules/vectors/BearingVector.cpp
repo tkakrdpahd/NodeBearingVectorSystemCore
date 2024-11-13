@@ -13,5 +13,5 @@ BearingVector::BearingVector(int index, const NodeVector& node, const Vector3& f
     : index(index), node(node), force(force), vector(vector) {}
 
 BearingVector::~BearingVector() {
-    std::cout << "Destroying BearingVector: Index: " << index << ", Force: " << force << ", Vector: " << vector << std::endl;
+    std::cout << "Destroying BearingVector: Node Index: " << index << ", Force: " << force << ", Vector: " << vector << std::endl;
 }

@@ -9,13 +9,13 @@
  * Purpose: Manage Vector, Segment Attributes
  * CRUD Vector Attributes
  */
-
 #ifndef OBJECTMANAGER_H
 #define OBJECTMANAGER_H
 
 #include <vector>
 #include <memory>
 #include <iostream>
+#include <optional> // For optional return type
 
 #include "NodeVector.h"
 #include "BearingVector.h"
@@ -38,13 +38,31 @@ public:
         return node;  // Return the created NodeVector
     }
 
-    // Create and store a BearingVector
-    std::shared_ptr<BearingVector> CreateBearingVector(int index, std::shared_ptr<NodeVector> node, const Vector3& force, const Vector3& vector) {
-        auto bearing = std::make_shared<BearingVector>(index, *node, force, vector);
-        _bearingVectors.push_back(bearing);
-        return bearing;  // Return the created BearingVector
+    // Create and store a BearingVector using NodeVector's index
+    std::shared_ptr<BearingVector> CreateBearingVector(int nodeIndex, const Vector3& force, const Vector3& vector) {
+        // Automatically find the NodeVector by nodeIndex
+        auto node = GetNodeVectorByIndex(nodeIndex);
+        if (node) {
+            int bearingIndex = static_cast<int>(vector.x);  // Use vector.x as the index
+            auto bearing = std::make_shared<BearingVector>(bearingIndex, **node, force, vector);
+            _bearingVectors.push_back(bearing);
+            return bearing;  // Return the created BearingVector
+        } else {
+            std::cerr << "NodeVector with index " << nodeIndex << " not found." << std::endl;
+            return nullptr;
+        }
+    }
+
+private:
+    // Retrieve NodeVector by index
+    std::optional<std::shared_ptr<NodeVector>> GetNodeVectorByIndex(int index) const {
+        for (const auto& node : _nodeVectors) {
+            if (node->index == index) {
+                return node; // Found NodeVector with the specified index
+            }
+        }
+        return std::nullopt; // Return empty optional if index not found
     }
 };
 
 #endif // OBJECTMANAGER_H
-

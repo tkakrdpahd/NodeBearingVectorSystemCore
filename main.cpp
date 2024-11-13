@@ -28,13 +28,20 @@ int main() {
     
     std::cout << "Hello, World!!!" << std::endl;
 
-ObjectManager manager;
+    ObjectManager manager;
 
+    // Create a NodeVector
     auto node = manager.CreateNodeVector(1, Vector3(1.0f, 2.0f, 3.0f));
-    auto bearing = manager.CreateBearingVector(2, node, Vector3(5.0f, 5.0f, 5.0f), Vector3(0.5f, 0.8f, 1.2f));
+    
+    // Automatically find the NodeVector by index and create a BearingVector
+    auto bearing = manager.CreateBearingVector(1, Vector3(5.0f, 5.0f, 5.0f), Vector3(0.5f, 0.8f, 1.2f));
 
-    std::cout << *node << std::endl;
-    std::cout << *bearing << std::endl;
+    if (node) {
+        std::cout << *node << std::endl;
+    }
+    if (bearing) {
+        std::cout << *bearing << std::endl;
+    }
 
     return 0;
 }

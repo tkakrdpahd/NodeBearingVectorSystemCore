@@ -65,7 +65,7 @@ public:
     ~BearingVector();
 
     friend std::ostream& operator<<(std::ostream& os, const BearingVector& bearing) {
-        os << "Index: " << bearing.index << ", Force: " << bearing.force << ", Vector: " << bearing.vector;
+        os << "NodeIndex: " << bearing.index << ", Force: " << bearing.force << ", Vector: " << bearing.vector;
         return os;
     }
 };
