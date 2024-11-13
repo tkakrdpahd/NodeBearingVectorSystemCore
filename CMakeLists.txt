@@ -16,8 +16,8 @@ find_package(glfw3 REQUIRED)
 # Sources (CMake 3.12 and above support ** for recursive globbing)
 file(GLOB_RECURSE SOURCES
     "main.cpp"
-    "module/*.cpp"
-    "module/**/*.cpp"
+    "modules/*.cpp"
+    "modules/**/*.cpp"
 )
 
 # 필요한 ImGui 백엔드 파일만 포함
