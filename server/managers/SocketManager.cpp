@@ -1,18 +1,19 @@
-
-#include "socketManager.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <cstring>
 #include <stdexcept>
+#include <iostream>
+
+#include "SocketManager.h"
 
 // 기본 생성자
 SocketManager::SocketManager() {
     serverSocket = -1;
-    port = FindPortNumber();  // 포트 번호 설정
+    port = FindPortNumber();  // Find an available port
 
-    // 서버 자동 시작
+    // Start the server automatically
     if (!StartServer()) {
         throw std::runtime_error("Failed to start the server. Please check configurations or port availability.");
     }
@@ -35,13 +36,13 @@ bool SocketManager::StartServer() {
     serverAddress.sin_addr.s_addr = INADDR_ANY;
     serverAddress.sin_port = htons(port);
 
-    // 소켓 바인딩
+    // Attempt to bind the socket
     if (bind(serverSocket, (sockaddr*)&serverAddress, sizeof(serverAddress)) < 0) {
         std::cerr << "Binding failed. Error: " << strerror(errno) << std::endl;
         return false;
     }
 
-    // 서버 대기 설정
+    // Start listening for incoming connections
     if (listen(serverSocket, 3) < 0) {
         std::cerr << "Error while trying to listen. Error: " << strerror(errno) << std::endl;
         return false;
@@ -67,7 +68,7 @@ void SocketManager::ListenForClients() {
     inet_ntop(AF_INET, &clientAddress.sin_addr, host, INET_ADDRSTRLEN);
     std::cout << "Connection accepted from " << host << ":" << ntohs(clientAddress.sin_port) << std::endl;
 
-    // 클라이언트와 메시지 주고받기
+    // Receive message from the client
     char buffer[1024] = {0};
     int bytesReceived = recv(clientSocket, buffer, sizeof(buffer), 0);
     if (bytesReceived < 0) {
@@ -76,10 +77,10 @@ void SocketManager::ListenForClients() {
         std::cout << "Received message from client: " << buffer << std::endl;
     }
 
-    // 클라이언트에 응답
+    // Send response to the client
     sendResponse(clientSocket, "Hello from server!");
     
-    // 클라이언트 소켓 닫기
+    // Close the client socket
     close(clientSocket);
 }
 
@@ -97,7 +98,32 @@ void SocketManager::closeServer() {
     }
 }
 
-// 포트 번호 찾기 (기본값으로 8080 사용)
+// Find an available port, starting at 8080 and incrementing if the port is in use
 int SocketManager::FindPortNumber() {
-    return 8080;  // 기본적으로 8080 포트 사용
+    int startPort = 8080;
+    int testSocket;
+    sockaddr_in testAddress;
+    testAddress.sin_family = AF_INET;
+    testAddress.sin_addr.s_addr = INADDR_ANY;
+
+    while (true) {
+        testSocket = socket(AF_INET, SOCK_STREAM, 0);
+        if (testSocket == -1) {
+            throw std::runtime_error("Failed to create socket for port testing.");
+        }
+
+        testAddress.sin_port = htons(startPort);
+
+        // Try binding to the current port
+        if (bind(testSocket, (sockaddr*)&testAddress, sizeof(testAddress)) == 0) {
+            close(testSocket);  // Close test socket as port is free
+            break;              // Found an available port
+        }
+
+        // If binding fails, increment port and try again
+        close(testSocket);
+        startPort++;
+    }
+
+    return startPort;  // Return the available port number
 }
