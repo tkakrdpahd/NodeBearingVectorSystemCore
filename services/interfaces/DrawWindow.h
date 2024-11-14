@@ -4,6 +4,7 @@
 
 #include "LoadInterface.h" // Load Vulkan & SDL2 func
 #include "Menu.h"
+#include "Simulator.h"
 
 int interface(int, char**) {
     // Setup SDL

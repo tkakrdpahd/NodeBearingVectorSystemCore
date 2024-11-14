@@ -1,9 +1,6 @@
 // Menu.cpp
 #include "Menu.h"
 
-// Menu.cpp
-#include "Menu.h"
-
 void menu(bool& show_demo_window, bool& show_another_window, ImVec4& clear_color, ImGuiIO& io, int& counter, float& f) {
     // 1. Show the big demo window
     if (show_demo_window)
