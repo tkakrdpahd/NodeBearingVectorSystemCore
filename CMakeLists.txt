@@ -10,8 +10,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Find package
 find_package(yaml-cpp REQUIRED)
-find_package(OpenGL REQUIRED)
-find_package(glfw3 REQUIRED)
+find_package(Vulkan REQUIRED)
+find_package(SDL2 REQUIRED)
 
 # Sources (CMake 3.12 and above support ** for recursive globbing)
 file(GLOB_RECURSE SOURCES
@@ -33,8 +33,8 @@ set(IMGUI_BACKEND_SOURCES
     ${PROJECT_SOURCE_DIR}/imgui/imgui_draw.cpp
     ${PROJECT_SOURCE_DIR}/imgui/imgui_demo.cpp
     # OpenGL
-    ${PROJECT_SOURCE_DIR}/imgui/backends/imgui_impl_glfw.cpp
-    ${PROJECT_SOURCE_DIR}/imgui/backends/imgui_impl_opengl3.cpp
+    ${PROJECT_SOURCE_DIR}/imgui/backends/imgui_impl_sdl2.cpp
+    ${PROJECT_SOURCE_DIR}/imgui/backends/imgui_impl_vulkan.cpp
 )
 
 # Add executable
@@ -43,6 +43,7 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${IMGUI_BACKEND_SOURCES})
 # Include directories
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/imgui
+    ${PROJECT_SOURCE_DIR}/imgui/backends
 
     ${PROJECT_SOURCE_DIR}/modules/entities
     ${PROJECT_SOURCE_DIR}/modules/operators
@@ -57,11 +58,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/services/managers
 )
 
-# Link yaml-cpp library using the correct target name
 target_link_libraries(${PROJECT_NAME} PRIVATE
     yaml-cpp::yaml-cpp
-    OpenGL::GL
-    glfw
+    SDL2::SDL2
+    SDL2::SDL2main
+    Vulkan::Vulkan
 )
 
 # Find and link Vulkan
