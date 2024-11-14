@@ -16,13 +16,16 @@
 #include <unistd.h>      // For close function
 #include <iostream>      // For standard I/O
 #include <cstring>       // For strerror
-#include "ServerManager.h"
+#include <atomic>
 
+#include "ServerManager.h"
 #include "SocketManager.h"
 #include "EventManager.h"
 
 class ServerManager {
     private:
+        std::atomic<bool> isRunning; // 서버 실행 상태를 나타내는 원자 변수
+
         SocketManager socketManager;  // Manages socket connections
         EventManager eventManager;    // Manages event handling
 

@@ -6,7 +6,7 @@
  * Last Modified: Nov 13, 2024
  */
 
-#include "serverManager.h"
+#include "ServerManager.h"
 #include <iostream>
 #include <sstream>
 #include <unistd.h>
