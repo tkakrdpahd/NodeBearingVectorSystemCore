@@ -12,26 +12,28 @@
 #ifndef SOCKETMANAGER_H
 #define SOCKETMANAGER_H
 
-#include <iostream>
 #include <string>
 #include <netinet/in.h>
 
 class SocketManager {
 private:
-    int serverSocket;                  // 서버 소켓 파일 디스크립터
-    sockaddr_in serverAddress;         // 서버 주소 정보
-    int port;                          // 서버 포트 번호
+    int serverSocket;
+    int port;
+    struct sockaddr_in serverAddress;
 
-    int FindPortNumber();              // 포트 번호 찾기 함수
-    bool StartServer();                // 서버 시작 함수
+    int FindPortNumber();
 
 public:
     SocketManager();
     ~SocketManager();
 
+    bool StartServer();
     void ListenForClients();
     void sendResponse(int clientSocket, const std::string& message);
     void closeServer();
+
+    int getPort() const;          // New member function to get the port number
+    int acceptClient();           // New member function to accept client connections
 };
 
 #endif // SOCKETMANAGER_H
