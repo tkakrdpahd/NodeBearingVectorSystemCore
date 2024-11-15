@@ -34,9 +34,13 @@ public:
 
     // Create and store a NodeVector
     std::shared_ptr<NodeVector> CreateNodeVector(int index, const Vector3& vector);
+    // Delete a NodeVector
+    std::shared_ptr<NodeVector> CreateNodeVector(int index);
 
     // Create and store a BearingVector using NodeVector's index
     std::shared_ptr<BearingVector> CreateBearingVector(int nodeIndex, const Vector3& force, const Vector3& vector);
+    // Delete a BearingVector using NodeVector's index & vector.x
+    std::shared_ptr<BearingVector> CreateBearingVector(int nodeIndex, const Vector3& vector);
 };
 
 #endif // OBJECTMANAGER_H
