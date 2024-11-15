@@ -35,6 +35,10 @@
  * Equ(14): \kappa(t) = \frac{|\vec{B}^{\prime\prime}(t) \times \vec{B}^\prime(t)|}{|\vec{B}^\prime(t)|^3}
  */
 
+#include "Vector3.h"
+#include "NodeVector.h"
+#include "BearingVector.h"
+
 class LinerSegment {
     public:
         /* data */

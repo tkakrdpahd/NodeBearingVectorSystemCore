@@ -1,3 +1,10 @@
+/**
+ * SurfaceSegment.h
+ * 
+ */
+
+#include "LinerSegment.h"
+
 class SurfaceSegment {
     private:
         /* data */
