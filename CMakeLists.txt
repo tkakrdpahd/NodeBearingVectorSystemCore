@@ -1,21 +1,20 @@
-# Minimum CMake version
-cmake_minimum_required(VERSION 3.12)
+# Root CMakeLists.txt
 
-# Project setup
-project(NodeBearingVectorSystem VERSION 1.0 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.14)
+project(NodeBearingVectorSystem VERSION 0.1 LANGUAGES CXX)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Find package
+# Find packages
 find_package(yaml-cpp REQUIRED)
 find_package(Vulkan REQUIRED)
 find_package(SDL2 REQUIRED)
+find_package(OpenGL REQUIRED)
 
-# Sources (CMake 3.12 and above support ** for recursive globbing)
+# Sources
 file(GLOB_RECURSE SOURCES
-    "main.cpp"
     "modules/*.cpp"
     "modules/**/*.cpp"
     "server/*.cpp"
@@ -24,24 +23,22 @@ file(GLOB_RECURSE SOURCES
     "services/**/*.cpp"
 )
 
-# 필요한 ImGui 백엔드 파일만 포함
+# ImGui Backend Sources
 set(IMGUI_BACKEND_SOURCES
-    # Essential module
     ${PROJECT_SOURCE_DIR}/imgui/imgui.cpp
     ${PROJECT_SOURCE_DIR}/imgui/imgui_widgets.cpp
     ${PROJECT_SOURCE_DIR}/imgui/imgui_tables.cpp
     ${PROJECT_SOURCE_DIR}/imgui/imgui_draw.cpp
     ${PROJECT_SOURCE_DIR}/imgui/imgui_demo.cpp
-    # OpenGL
     ${PROJECT_SOURCE_DIR}/imgui/backends/imgui_impl_sdl2.cpp
     ${PROJECT_SOURCE_DIR}/imgui/backends/imgui_impl_vulkan.cpp
 )
 
-# Add executable
-add_executable(${PROJECT_NAME} ${SOURCES} ${IMGUI_BACKEND_SOURCES})
+# Create a library from the sources
+add_library(NodeBearingVectorSystemLib ${SOURCES} ${IMGUI_BACKEND_SOURCES})
 
 # Include directories
-target_include_directories(${PROJECT_NAME} PRIVATE
+target_include_directories(NodeBearingVectorSystemLib PUBLIC
     ${PROJECT_SOURCE_DIR}/imgui
     ${PROJECT_SOURCE_DIR}/imgui/backends
 
@@ -53,52 +50,40 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/server/api
     ${PROJECT_SOURCE_DIR}/server/dto
     ${PROJECT_SOURCE_DIR}/server/managers
-    
+
     ${PROJECT_SOURCE_DIR}/services/interfaces
     ${PROJECT_SOURCE_DIR}/services/managers
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE
+# Link libraries
+target_link_libraries(NodeBearingVectorSystemLib PUBLIC
     yaml-cpp::yaml-cpp
     SDL2::SDL2
     SDL2::SDL2main
     Vulkan::Vulkan
+    OpenGL::GL
 )
 
-# Find and link Vulkan
-find_package(Vulkan REQUIRED)
-if (Vulkan_FOUND)
-    message(STATUS "Vulkan found: ${Vulkan_INCLUDE_DIR}")
-    target_include_directories(${PROJECT_NAME} PRIVATE ${Vulkan_INCLUDE_DIR})
-    target_link_libraries(${PROJECT_NAME} PRIVATE Vulkan::Vulkan)
-endif()
-
-# Find and link OpenGL
-find_package(OpenGL REQUIRED)
-if (OPENGL_FOUND)
-    message(STATUS "OpenGL found: ${OPENGL_INCLUDE_DIR}")
-    target_include_directories(${PROJECT_NAME} PRIVATE ${OPENGL_INCLUDE_DIR})
-    target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL)
-endif()
-
-# Find and link Metal (macOS only)
+# Platform-specific libraries
 if (APPLE)
     find_library(METAL_LIBRARY Metal)
     if (METAL_LIBRARY)
-        message(STATUS "Metal found: ${METAL_LIBRARY}")
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${METAL_LIBRARY})
-        
-        # Suppress missing include directory warnings
-        target_compile_options(${PROJECT_NAME} PRIVATE -Wno-error -Wno-missing-include-dirs)
+        target_link_libraries(NodeBearingVectorSystemLib PRIVATE ${METAL_LIBRARY})
+        target_compile_options(NodeBearingVectorSystemLib PRIVATE -Wno-error -Wno-missing-include-dirs)
     endif()
 endif()
 
-# Find and link DirectX (Windows only)
 if (WIN32)
     find_library(D3D11_LIBRARY d3d11)
     find_library(DXGI_LIBRARY dxgi)
     if (D3D11_LIBRARY AND DXGI_LIBRARY)
-        message(STATUS "DirectX found: ${D3D11_LIBRARY}, ${DXGI_LIBRARY}")
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${D3D11_LIBRARY} ${DXGI_LIBRARY})
+        target_link_libraries(NodeBearingVectorSystemLib PRIVATE ${D3D11_LIBRARY} ${DXGI_LIBRARY})
     endif()
 endif()
+
+# Add the main executable and link the library
+add_executable(${PROJECT_NAME} main.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE NodeBearingVectorSystemLib)
+
+# Add tests subdirectory
+add_subdirectory(tests)
