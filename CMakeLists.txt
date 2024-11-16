@@ -12,7 +12,6 @@ find_package(yaml-cpp REQUIRED)
 # Required Packages for GUI
 find_package(Vulkan REQUIRED)
 find_package(SDL2 REQUIRED)
-find_package(OpenGL REQUIRED)
 
 # ------------------------------------
 # NodeBearingVectorSystem class files
@@ -71,7 +70,6 @@ target_link_libraries(NodeBearingVectorSystemLib PUBLIC
     SDL2::SDL2
     SDL2::SDL2main
     Vulkan::Vulkan
-    OpenGL::GL
 )
 
 # Platform-specific libraries
