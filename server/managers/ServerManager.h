@@ -18,22 +18,22 @@
 #include <cstring>       // For strerror
 #include <atomic>
 
-#include "ServerManager.h"
 #include "SocketManager.h"
 #include "EventManager.h"
 
 class ServerManager {
     private:
-        std::atomic<bool> isRunning; // 서버 실행 상태를 나타내는 원자 변수
-        SocketManager socketManager;  // Manages socket connections
-        EventManager eventManager;    // Manages event handling
+        std::atomic<bool> isRunning;
+        SocketManager _socketManager;
+        EventManager _eventManager;
 
-        void handleClient(int clientSocket);  // Private method to handle client requests
+        // Private method to handle client requests
+        void handleClient(int clientSocket);
     public:
         ServerManager();
         ~ServerManager();
 
-        void start();  // Starts the server and listens for client requests
+        void start();
         void stop();
 };
 

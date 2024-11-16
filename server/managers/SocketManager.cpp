@@ -11,12 +11,9 @@
 #include <netinet/in.h>
 #include <unistd.h>
 
-SocketManager::SocketManager() : serverSocket(-1), port(0), isRunning(false) {
+SocketManager::SocketManager(std::atomic<bool>& runningFlag)
+    : serverSocket(-1), port(0), isRunning(runningFlag) {
     port = findPortNumber();
-
-    if (!StartServer()) {
-        throw std::runtime_error("Failed to start the server. Please check configurations or port availability.");
-    }
 }
 
 SocketManager::~SocketManager() {
@@ -67,7 +64,6 @@ void SocketManager::ListenForClients() {
             continue;
         }
 
-        // 클라이언트 요청 처리 로직 추가
         std::cout << "Client connected." << std::endl;
         sendResponse(clientSocket, "Hello from server!");
         close(clientSocket);
@@ -118,10 +114,6 @@ int SocketManager::findPortNumber() {
 
 int SocketManager::getPort() const {
     return port;
-}
-
-bool SocketManager::isServerRunning() const {
-    return isRunning.load();
 }
 
 int SocketManager::acceptClient() {
