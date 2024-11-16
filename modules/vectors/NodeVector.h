@@ -16,8 +16,8 @@
 #ifndef NODEVECTOR_H
 #define NODEVECTOR_H
 
-#include "Vector3.h"
 #include <iostream>
+#include "Vector3.h"
 
 class NodeVector {
 public:
