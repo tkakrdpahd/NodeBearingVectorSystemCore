@@ -15,11 +15,11 @@
  * Equ(3): z = r * cos(phi)
  */
 
-
 #ifndef COORDINATECONVERTER_H
 #define COORDINATECONVERTER_H
 
 #include <cmath>
+#include "Vector3.h"
 
 /**
  * @brief Structure representing a Spherical Vector.

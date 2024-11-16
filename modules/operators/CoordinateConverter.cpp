@@ -1,5 +1,9 @@
 /**
  * CoordinateConverter.cpp
+ * Linked file CoordinateConverter.h
+ * Security: Confidential
+ * Author: Minseok Doo
+ * Date: Oct 7, 2024
  */
 
 #include "CoordinateConverter.h"
