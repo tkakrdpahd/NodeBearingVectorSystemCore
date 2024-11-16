@@ -16,7 +16,9 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 # Add the test executable
-add_executable(test_nodebearingvectorsystem test.cc)
+add_executable(test_nodebearingvectorsystem 
+  ObjectManagerTests.cc
+)
 
 # Link against GTest and the main library
 target_link_libraries(test_nodebearingvectorsystem 
