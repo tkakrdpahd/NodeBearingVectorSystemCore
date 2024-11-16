@@ -7,3 +7,19 @@
  * 
  * Purpose: Implementation of the BearingVector class methods
  */
+
+
+#include "Vector3.h"
+#include "CoordinateConverter.h"
+
+class BearingVector
+{
+private:
+    int NodeIndex;
+    Vector3 Vector;
+public:
+    BearingVector(/* args */);
+    ~BearingVector();
+    Vector3 SphericalBearingVector();
+    Vector3 CartesianBearingVector();
+};
