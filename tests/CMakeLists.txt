@@ -1,5 +1,8 @@
 # tests/CMakeLists.txt
 
+# --------------------
+# Google Test Setting
+# --------------------
 include(FetchContent)
 FetchContent_Declare(
   googletest
@@ -21,8 +24,7 @@ target_link_libraries(test_nodebearingvectorsystem
     NodeBearingVectorSystemLib
 )
 
-# Include directories (if not already handled by the library)
-# Not needed if the library exposes all necessary includes via PUBLIC
-
 include(GoogleTest)
 gtest_discover_tests(test_nodebearingvectorsystem)
+
+# --------------------
