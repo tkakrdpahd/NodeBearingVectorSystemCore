@@ -21,21 +21,31 @@ ServerManager::~ServerManager() {
 }
 
 void ServerManager::start() {
+    isRunning = true; // 서버 실행 시작
+
     std::cout << "ServerManager starting and waiting for clients on port " << socketManager.getPort() << "..." << std::endl;
 
-    while (true) {
+    while (isRunning) { // 플래그 기반으로 실행 제어
         int clientSocket = socketManager.acceptClient();
         if (clientSocket < 0) {
+            if (!isRunning) break; // 종료 중이면 루프 탈출
             std::cerr << "Failed to accept client connection." << std::endl;
             continue;
         }
-        
+
         // Handle the client request
         handleClient(clientSocket);
-        
+
         // Close the client socket after handling the request
         close(clientSocket);
     }
+
+    std::cout << "ServerManager stopped." << std::endl;
+}
+
+void ServerManager::stop() {
+    isRunning = false; // 실행 상태 종료
+    socketManager.closeServer(); // 소켓 닫기
 }
 
 void ServerManager::handleClient(int clientSocket) {

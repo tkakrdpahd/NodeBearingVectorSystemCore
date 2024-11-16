@@ -1,13 +1,8 @@
 /**
  * SocketManager.cpp
- * Security: Top Secret
- * Author: Minseok Doo
- * Date: Oct 13, 2024
- * Last Modified: Nov 14, 2024
- * 
  * Purpose: Manage Socket Server
+ * 
  */
-
 #include "SocketManager.h"
 #include <iostream>
 #include <stdexcept>
@@ -16,9 +11,8 @@
 #include <netinet/in.h>
 #include <unistd.h>
 
-SocketManager::SocketManager() {
-    serverSocket = -1;
-    port = FindPortNumber();
+SocketManager::SocketManager() : serverSocket(-1), port(0), isRunning(false) {
+    port = findPortNumber();
 
     if (!StartServer()) {
         throw std::runtime_error("Failed to start the server. Please check configurations or port availability.");
@@ -30,9 +24,14 @@ SocketManager::~SocketManager() {
 }
 
 bool SocketManager::StartServer() {
+    if (isRunning.load()) {
+        std::cerr << "Server is already running on port " << port << "." << std::endl;
+        return false;
+    }
+
     serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (serverSocket == -1) {
-        std::cerr << "Failed to create socket." << std::endl;
+        std::cerr << "Failed to create socket. Error: " << strerror(errno) << std::endl;
         return false;
     }
 
@@ -45,52 +44,52 @@ bool SocketManager::StartServer() {
         return false;
     }
 
-    if (listen(serverSocket, 3) < 0) {
+    if (listen(serverSocket, 5) < 0) {
         std::cerr << "Error while trying to listen. Error: " << strerror(errno) << std::endl;
         return false;
     }
 
+    isRunning.store(true);
     std::cout << "Server started on port " << port << std::endl;
     return true;
 }
 
 void SocketManager::ListenForClients() {
-    sockaddr_in clientAddress;
-    socklen_t clientSize = sizeof(clientAddress);
-
     std::cout << "Waiting for incoming client connections..." << std::endl;
-    int clientSocket = accept(serverSocket, (sockaddr*)&clientAddress, &clientSize);
-    if (clientSocket < 0) {
-        std::cerr << "Failed to accept connection. Error: " << strerror(errno) << std::endl;
-        return;
-    }
 
-    // Handle client connection
-    char buffer[1024] = {0};
-    int bytesReceived = recv(clientSocket, buffer, sizeof(buffer), 0);
-    if (bytesReceived < 0) {
-        std::cerr << "Error in recv(). Error: " << strerror(errno) << std::endl;
-    } else {
-        std::cout << "Received message from client: " << buffer << std::endl;
-    }
+    while (isRunning.load()) {
+        int clientSocket = acceptClient();
+        if (clientSocket < 0) {
+            if (!isRunning.load()) {
+                break; // 서버가 종료된 상태면 루프 종료
+            }
+            std::cerr << "Failed to accept connection. Error: " << strerror(errno) << std::endl;
+            continue;
+        }
 
-    sendResponse(clientSocket, "Hello from server!");
-    close(clientSocket);
+        // 클라이언트 요청 처리 로직 추가
+        std::cout << "Client connected." << std::endl;
+        sendResponse(clientSocket, "Hello from server!");
+        close(clientSocket);
+    }
 }
 
 void SocketManager::sendResponse(int clientSocket, const std::string& message) {
-    send(clientSocket, message.c_str(), message.size(), 0);
+    if (send(clientSocket, message.c_str(), message.size(), 0) < 0) {
+        std::cerr << "Failed to send response. Error: " << strerror(errno) << std::endl;
+    }
 }
 
 void SocketManager::closeServer() {
     if (serverSocket != -1) {
         close(serverSocket);
         serverSocket = -1;
+        isRunning.store(false);
         std::cout << "Server socket closed." << std::endl;
     }
 }
 
-int SocketManager::FindPortNumber() {
+int SocketManager::findPortNumber() {
     int startPort = 8080;
     int testSocket;
     sockaddr_in testAddress;
@@ -117,14 +116,21 @@ int SocketManager::FindPortNumber() {
     return startPort;
 }
 
-// New function: Get the current port number
 int SocketManager::getPort() const {
     return port;
 }
 
-// New function: Accept a client connection
+bool SocketManager::isServerRunning() const {
+    return isRunning.load();
+}
+
 int SocketManager::acceptClient() {
     sockaddr_in clientAddress;
     socklen_t clientSize = sizeof(clientAddress);
-    return accept(serverSocket, (sockaddr*)&clientAddress, &clientSize);
+
+    int clientSocket = accept(serverSocket, (sockaddr*)&clientAddress, &clientSize);
+    if (clientSocket < 0 && isRunning.load()) {
+        std::cerr << "Error accepting client connection. Error: " << strerror(errno) << std::endl;
+    }
+    return clientSocket;
 }
