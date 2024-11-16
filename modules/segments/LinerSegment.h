@@ -35,22 +35,61 @@
  * Equ(14): \kappa(t) = \frac{|\vec{B}^{\prime\prime}(t) \times \vec{B}^\prime(t)|}{|\vec{B}^\prime(t)|^3}
  */
 
+#ifndef LINERSEGMENT_H
+#define LINERSEGMENT_H
+
 #include "Vector3.h"
 #include "NodeVector.h"
 #include "BearingVector.h"
+#include <vector>
+#include <cmath>
+#include <iostream> // 디버깅을 위한 헤더 추가
 
-class LinerSegment {
-    public:
-        /* data */
-    private:
-        LinerSegment(/* args */);
-        ~LinerSegment();
-
+struct NodeVectorWithBearing {
+    NodeVector node;
+    std::vector<BearingVector> bearings;
 };
 
-LinerSegment::LinerSegment(/* args */) {
-}
+struct LinerSegmentData {
+    int LinerBufferIndex;
+    NodeVector NodeStart;
+    NodeVector NodeEnd;
+    float LevelOfDetail;
+    float alpha;
+};
 
-LinerSegment::~LinerSegment() {
-}
+class LinerSegment {
+private:
+    float LevelOfDetail;
+    NodeVectorWithBearing node_1;
+    NodeVectorWithBearing node_2;
+    std::vector<Vector3> controlPoints;
+    std::vector<Vector3> sampledPoints;
+    float alpha; // Blending factor for control points
+    float L_min, L_max; // Min and Max lengths for Equ(6) and Equ(7)
 
+    // Helper functions
+    void calculateControlPoints();
+    void calculateBezierCurve();
+    int binomialCoefficient(int n, int k);
+
+public:
+    // Constructor
+    LinerSegment(const NodeVectorWithBearing& n1, const NodeVectorWithBearing& n2, float lod, float alphaVal = 0.5f);
+
+    // Functions to generate the Bezier curve and sample vertices
+    void SamplingBezierCurve();
+    void SamplingVertex();
+    LinerSegmentData ReturnLinerSegmentData() const; // 함수 선언
+
+    // Getters
+    const std::vector<Vector3>& getSampledPoints() const { return sampledPoints; }
+    const std::vector<Vector3>& getControlPoints() const { return controlPoints; }
+    float getLevelOfDetail() const { return LevelOfDetail; }
+    float getAlpha() const { return alpha; }
+
+    // Setters
+    void setLevelOfDetail(float lod) { LevelOfDetail = lod; }
+};
+
+#endif // LINERSEGMENT_H
