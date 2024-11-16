@@ -34,38 +34,3 @@
  * Equ(13): \vec{P}_n = \vec{N}_2
  * Equ(14): \kappa(t) = \frac{|\vec{B}^{\prime\prime}(t) \times \vec{B}^\prime(t)|}{|\vec{B}^\prime(t)|^3}
  */
-
-#ifndef LINERSEGMENT_H
-#define LINERSEGMENT_H
-
-#include <iostream>
-#include <vector>
-#include <cmath>
-
-#include "Vector3.h"
-#include "NodeVector.h"
-#include "BearingVector.h"
-
-class LinerSegment {
-private:
-    NodeVector _startNode;
-    std::vector<BearingVector> _startNodeBearingVectors;
-    NodeVector _endNode;
-    std::vector<BearingVector> _endNodeBearingVectors;
-
-public:
-    // Constructor
-    LinerSegment(const NodeVector& startNode, const std::vector<BearingVector>& startNodeBearingVectors,
-                 const NodeVector& endNode, const std::vector<BearingVector>& endNodeBearingVectors)
-        : _startNode(startNode), _startNodeBearingVectors(startNodeBearingVectors),
-          _endNode(endNode), _endNodeBearingVectors(endNodeBearingVectors) {}
-
-    // Destructor
-    ~LinerSegment() {}
-
-    // Sampling points
-    void SamplingBezierCurve();
-    void SamplingVertex();
-};
-
-#endif // LINERSEGMENT_H
