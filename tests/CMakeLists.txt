@@ -26,5 +26,3 @@ target_link_libraries(test_nodebearingvectorsystem
 
 include(GoogleTest)
 gtest_discover_tests(test_nodebearingvectorsystem)
-
-# --------------------
