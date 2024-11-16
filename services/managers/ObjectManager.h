@@ -17,17 +17,19 @@
 #include <vector>
 #include <memory>
 #include <iostream>
-#include <optional> // For optional return type
+#include <optional>
 
 #include "Vector3.h"
 #include "NodeVector.h"
 #include "BearingVector.h"
+#include "LinerSegment.h"
 
 class ObjectManager {
 private:
-    // Containers to store NodeVectors and BearingVectors
+    // Containers to store NodeVectors, BearingVectors, LinerSegments and SurfaceSegments
     std::vector<std::shared_ptr<NodeVector>> _nodeVectors;
     std::vector<std::shared_ptr<BearingVector>> _bearingVectors;
+    std::vector<std::shared_ptr<LinerSegment>> _linerSegments;
 
     /**
      * @brief Retrieve a NodeVector by its index.

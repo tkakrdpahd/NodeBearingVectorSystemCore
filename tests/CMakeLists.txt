@@ -18,6 +18,7 @@ enable_testing()
 # Add the test executable
 add_executable(test_nodebearingvectorsystem 
   modules/vectors/NodeVectorTest.cc
+  modules/segments/LinerSegmentTest.cc
   ObjectManagerTests.cc
 )
 

@@ -85,7 +85,7 @@ std::shared_ptr<NodeVector> ObjectManager::DeleteNodeVector(int index) {
     return nullptr;
 }
 
-// Create and store a BearingVector using NodeVector's index
+// Create and store a BearingVector
 std::shared_ptr<BearingVector> ObjectManager::CreateBearingVector(int nodeIndex, const Vector3& force, const Vector3& vector) {
     // Automatically find the NodeVector by nodeIndex
     auto nodeOpt = GetNodeVectorByIndex(nodeIndex);
