@@ -7,22 +7,27 @@
  * 
  * Purpose: Implementation of the BearingVector class methods
  */
+#ifndef BEARINGVECTOR_H
+#define BEARINGVECTOR_H
 
 #include "Vector3.h"
+#include "NodeVector.h"
 #include "CoordinateConverter.h"
 
 /**
  * @brief Bearing Vector
  * 
- * @param NodeIndex Patrent Node Vector Index
+ * @param NodeVector Patrent Node Vector
  * @param Force Bearing Vector Force; (x, y, z)
  * @param Vector Bearing Vector location; (x, y, z), (d_i, theta_i, phi_i)
  */
 struct BearingVector
 {
-    int NodeIndex;
+    NodeVector Node;
     Vector3 Force;
     Vector3 Vector;
 
-    BearingVector(int nodeId, const Vector3& force, const Vector3& vec) : NodeIndex(nodeId), Force(force), Vector(vec) {}
+    BearingVector(const NodeVector& node, const Vector3& force, const Vector3& vec) : Node(node), Force(force), Vector(vec) {}
 };
+
+#endif // BEARINGVECTOR_H
