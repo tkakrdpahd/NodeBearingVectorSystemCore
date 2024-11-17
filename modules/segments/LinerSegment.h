@@ -48,7 +48,7 @@
 class LinerSegment
 {
 private:
-    std::vector<Vector3> _linerSegmentCache;
+    std::shared_ptr<std::vector<Vector3>> _linerSegmentCache;
 public:
     LinerSegment(/* args */);
     ~LinerSegment();
