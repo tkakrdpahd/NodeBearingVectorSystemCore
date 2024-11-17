@@ -1,29 +1,24 @@
-/** 
- * NodeVector.h
- * Linked file: NodeVector.cpp
- * Security: Top Secret
- * Author: Minseok Doo
- * Date: Oct 7, 2024
- * Last Modified: Nov 13, 2024
- * 
- * Purpose of Class:
- * Declare Node Vector
- * 
- * Equations:
- * Equ(1): \vec{N_i} = \left( r_i, \theta_i, \phi_i \right)
- */
+// NodeVector.h
+
+#ifndef NODEVECTOR_H
+#define NODEVECTOR_H
 
 #include "Vector3.h"
 #include "CoordinateConverter.h"
 
-class NodeVector
+/**
+ * @brief Node Vector
+ * 
+ * @param Index Node Vector index
+ * @param Vector Node Vector location; (x, y, z), (r_i, theta_i, phi_i)
+ */
+struct NodeVector
 {
-private:
     int Index;
     Vector3 Vector;
-public:
-    NodeVector(/* args */);
-    ~NodeVector();
-    Vector3 SphericalNodeVector();
-    Vector3 CartesianNodeVector();
+
+    // (int, Vector3) 생성자 추가
+    NodeVector(int nodeId, const Vector3& vec) : Index(nodeId), Vector(vec) {}
 };
+
+#endif // NODEVECTOR_H

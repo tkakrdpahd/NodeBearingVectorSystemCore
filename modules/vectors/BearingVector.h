@@ -8,18 +8,19 @@
  * Purpose: Implementation of the BearingVector class methods
  */
 
-
 #include "Vector3.h"
 #include "CoordinateConverter.h"
 
-class BearingVector
+/**
+ * @brief Bearing Vector
+ * 
+ * @param NodeIndex Patrent Node Vector Index
+ * @param Force Bearing Vector Force; (x, y, z)
+ * @param Vector Bearing Vector location; (x, y, z), (r_i, theta_i, phi_i)
+ */
+struct BearingVector
 {
-private:
     int NodeIndex;
+    Vector3 Force;
     Vector3 Vector;
-public:
-    BearingVector(/* args */);
-    ~BearingVector();
-    Vector3 SphericalBearingVector();
-    Vector3 CartesianBearingVector();
 };
