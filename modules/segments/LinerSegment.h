@@ -35,6 +35,11 @@
  * Equ(14): \kappa(t) = \frac{|\vec{B}^{\prime\prime}(t) \times \vec{B}^\prime(t)|}{|\vec{B}^\prime(t)|^3}
  */
 
+#ifndef LINERSEGMENT_H
+#define LINERSEGMENT_H
+
+#include <vector>
+
 #include "CoordinateConverter.h"
 #include "Vector3.h"
 #include "NodeVector.h"
@@ -43,16 +48,10 @@
 class LinerSegment
 {
 private:
-    /* data */
+    std::vector<Vector3> _linerSegmentCache;
 public:
     LinerSegment(/* args */);
     ~LinerSegment();
 };
 
-LinerSegment::LinerSegment(/* args */)
-{
-}
-
-LinerSegment::~LinerSegment()
-{
-}
+#endif // LINERSEGMENT_H

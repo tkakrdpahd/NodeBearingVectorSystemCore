@@ -28,3 +28,13 @@
  * Equ(13): \vec{P}_n = \vec{N}_2
  * Equ(14): \kappa(t) = \frac{|\vec{B}^{\prime\prime}(t) \times \vec{B}^\prime(t)|}{|\vec{B}^\prime(t)|^3}
  */
+
+#include "LinerSegment.h"
+
+LinerSegment::LinerSegment(/* args */)
+{
+}
+
+LinerSegment::~LinerSegment()
+{
+}
