@@ -41,6 +41,7 @@
 #include <vector>
 
 #include "CoordinateConverter.h"
+#include "GlobalLocationConverter.h"
 #include "Vector3.h"
 #include "NodeVector.h"
 #include "BearingVector.h"

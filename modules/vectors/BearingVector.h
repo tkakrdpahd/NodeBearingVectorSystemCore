@@ -20,28 +20,27 @@
 #define BEARINGVECTOR_H
 
 #include "Vector3.h"
-#include "NodeVector.h"
 #include "CoordinateConverter.h"
 
 /**
  * @brief Bearing Vector
  * 
- * @param NodeVector Parent Node Vector
+ * @param NodeIndex Parent Node Vector Index
  * @param Force Bearing Vector Force; (x, y, z)
  * @param Vector Bearing Vector location; (x, y, z), (d_i, theta_i, phi_i)
  */
 struct BearingVector
 {
-    NodeVector Node;
+    int NodeIndex;
     Vector3 Force;
     Vector3 Vector;
 
-    // constructor
-    BearingVector() : Node(0, Vector3()), Force(), Vector() {}
+    // 기본 생성자
+    BearingVector() : NodeIndex(0), Force(), Vector() {}
 
     // 매개변수 생성자
-    BearingVector(const NodeVector& node, const Vector3& force, const Vector3& vec) 
-        : Node(node), Force(force), Vector(vec) {}
+    BearingVector(int nodeIndex, const Vector3& force, const Vector3& vec) 
+        : NodeIndex(nodeIndex), Force(force), Vector(vec) {}
 };
 
 #endif // BEARINGVECTOR_H
