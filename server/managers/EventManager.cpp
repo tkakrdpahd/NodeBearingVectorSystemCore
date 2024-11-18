@@ -40,30 +40,6 @@ std::string EventManager::handleDeleteRequest(const std::string& data) {
     return "DELETE request handled";
 }
 
-// void EventManager::handleGetRequest(const std::string& data) {
-//     std::cout << "Handling GET request with data: " << data << std::endl;
-//     GetAllData getData;
-//     getData.execute();  // Assuming execute() runs the GET logic
-// }
-
-// void EventManager::handlePostRequest(const std::string& data) {
-//     std::cout << "Handling POST request with data: " << data << std::endl;
-//     PostAllData postData;
-//     postData.execute(data);  // Assuming execute() takes data for POST
-// }
-
-// void EventManager::handlePutRequest(const std::string& data) {
-//     std::cout << "Handling PUT request with data: " << data << std::endl;
-//     PutAllData putData;
-//     putData.execute(data);  // Assuming execute() takes data for PUT
-// }
-
-// void EventManager::handleDeleteRequest(const std::string& data) {
-//     std::cout << "Handling DELETE request with data: " << data << std::endl;
-//     DeleteAllData deleteData;
-//     deleteData.execute(data);  // Assuming execute() takes data for DELETE
-// }
-
 std::string EventManager::processRequest(const std::string& method, const std::string& data) {
     if (method == "GET") {
         return handleGetRequest(data);
