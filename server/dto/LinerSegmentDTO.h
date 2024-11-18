@@ -1,4 +1,0 @@
-/**
- * LinerSegmentDTO.h
- * 
- */
