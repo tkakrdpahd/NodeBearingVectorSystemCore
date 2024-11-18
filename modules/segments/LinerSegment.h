@@ -1,62 +1,67 @@
-/**
- * LinerSegment.h
- * Linked file: LinerSegment.cpp
- * Security: Top Secret
- * Author: Minseok Doo
- * Date: Oct 9, 2024
- * Last Modified: Nov 11, 2024
- * 
- * Purpose: 
- * 1. Create B-Spline line
- * 2. Create Polygon Vertex based on LOD
- * 
- * Equations
- * Equ(1): R_i = R_z(\theta_i) R_y(\phi_i)
- * Equ(2): R_z(\theta_i) = \begin{pmatrix}
- * \cos{\theta_i} & -\sin{\theta_i} & 0 \\
- * \sin{\theta_i} & \cos{\theta_i} & 0 \\
- * 0 & 0 & 1 \\
- * \end{pmatrix}
- * Equ(3): R_y(\phi_i) = \begin{pmatrix}
- * \cos{\phi_i} & 0 & \sin{\phi_i} \\
- * 0 & 1 & 0 \\
- * -\sin{\phi_i} & 0 & \cos{\phi_i} \\
- * \end{pmatrix}
- * Equ(4): \vec{V}_{\text{total}, s} = \sum_{i=1}^{D_s} d_{s,i} \cdot \left( \vec{B}_i \otimes \vec{F}_i \right)
- * Equ(5): \vec{P}_{\text{final}, s} = \vec{N}_{\text{Cartesian}} + \vec{V}_{\text{total}, s}
- * Equ(6): L_{d,\text{in}} = L_{\text{min}} + \left(L_{\text{max}} - L_{\text{min}}\right) \cdot |\vec{B}_{d,\text{in}}|
- * Equ(7): L_{d,\text{out}} = L_{\text{min}} + \left(L_{\text{max}} - L_{\text{min}}\right) \cdot |\vec{B}_{d,\text{out}}|
- * Equ(8): \vec{B}(t) = \sum_{i=0}^{n} \binom{n}{i} (1 - t)^{n - i} t^i \vec{P}_i, \quad 0 \leq t \leq 1
- * Equ(9): \vec{P}_0 = \vec{N}_1
- * Equ(10): \vec{P}_i = \vec{N}_1 + \vec{C}_{1,i}, \quad 1 \leq i \leq D_1
- * Equ(11): \vec{P}_{D_1+1} = \alpha \left( \vec{N}_1 + \vec{C}_{1,D_1} \right) + (1 - \alpha) \left( \vec{N}_2 - \vec{C}_{2,D_2} \right)
- * Equ(12): \vec{P}_{D_1+1+j} = \vec{N}_2 - \vec{C}_{2,D_2 - j + 1}, \quad 1 \leq j \leq D_2
- * Equ(13): \vec{P}_n = \vec{N}_2
- * Equ(14): \kappa(t) = \frac{|\vec{B}^{\prime\prime}(t) \times \vec{B}^\prime(t)|}{|\vec{B}^\prime(t)|^3}
- */
-
 #ifndef LINERSEGMENT_H
 #define LINERSEGMENT_H
 
 #include <vector>
+#include <memory>
+#include <cmath>
 
-#include "CoordinateConverter.h"
 #include "Vector3.h"
 #include "NodeVector.h"
 #include "BearingVector.h"
 
+/**
+ * @brief LinerSegment 클래스
+ * 
+ * NodeVector와 BearingVector를 사용하여 B-Spline 곡선을 생성하고,
+ * 레벨 오브 디테일(LOD)에 따라 폴리곤 정점을 생성하는 기능을 제공합니다.
+ */
 class LinerSegment
 {
-private:
-    std::shared_ptr<std::vector<Vector3>> _linerSegmentCache;
 public:
-    int LOD;
-    NodeVector& NodeStart;
-    std::vector<BearingVector>& _bearingVectorStart;
-    NodeVector& NodeEnd;
-    std::vector<BearingVector>& _bearingVectorEnd;
-    LinerSegment(/* args */);
+    // 컨트롤 포인트 계산 (Equ. 17~21)
+    std::vector<Vector3> CalculateControlPoints(float alpha) const;
+
+    // 베지어 곡선의 점 계산 (Equ. 16)
+    Vector3 BezierPoint(const std::vector<Vector3>& controlPoints, float t) const;
+
+    // 이항 계수 계산 (n choose k)
+    float BinomialCoefficient(int n, int k) const;
+
+    // 베지어 곡선의 1차 도함수 계산
+    Vector3 BezierFirstDerivative(const std::vector<Vector3>& controlPoints, float t) const;
+
+    // 베지어 곡선의 2차 도함수 계산
+    Vector3 BezierSecondDerivative(const std::vector<Vector3>& controlPoints, float t) const;
+
+private:
+    // 캐시된 선분 데이터
+    std::shared_ptr<std::vector<Vector3>> _linerSegmentCache;
+
+public:
+    // 시작 노드 및 베어링 벡터
+    NodeVector NodeStart;
+    std::vector<BearingVector> BearingVectorStart;
+
+    // 종료 노드 및 베어링 벡터
+    NodeVector NodeEnd;
+    std::vector<BearingVector> BearingVectorEnd;
+
+    // 생성자 및 소멸자
+    LinerSegment(const NodeVector& start, const std::vector<BearingVector>& bearingStart,
+                const NodeVector& end, const std::vector<BearingVector>& bearingEnd);
     ~LinerSegment();
+
+    // B-Spline 라인 생성
+    void CreateBSpline(float alpha, int numSegments);
+
+    // LOD 기반 폴리곤 정점 생성
+    std::vector<Vector3> CreatePolygonVertices(int lod) const;
+
+    // 캐시된 선분 데이터 가져오기
+    std::shared_ptr<std::vector<Vector3>> GetLinerSegmentCache() const;
+
+    // 곡률 계산 함수
+    float CalculateCurvature(float t) const;
 };
 
 #endif // LINERSEGMENT_H

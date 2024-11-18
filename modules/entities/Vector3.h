@@ -5,7 +5,6 @@
  * Created Date: Oct 24, 2024
  * Last Modified: Nov 13, 2024
  */
-
 #ifndef VECTOR3_H
 #define VECTOR3_H
 
@@ -50,6 +49,11 @@ public:
         return Vector3(x * scalar, y * scalar, z * scalar);
     }
 
+    // Hadamard product (Vector3 * Vector3)
+    Vector3 operator*(const Vector3& v) const {
+        return Vector3(x * v.x, y * v.y, z * v.z);
+    }
+
     // Scalar division
     Vector3 operator/(float scalar) const {
         return Vector3(x / scalar, y / scalar, z / scalar);
@@ -72,6 +76,14 @@ public:
     // Vector magnitude
     float magnitude() const {
         return std::sqrt(x * x + y * y + z * z);
+    }
+
+    // Normalize the vector
+    Vector3 normalized() const {
+        float mag = magnitude();
+        if (mag == 0.0f)
+            return Vector3(0.0f, 0.0f, 0.0f);
+        return Vector3(x / mag, y / mag, z / mag);
     }
 
     // Friend function for scalar multiplication (float * Vector3)
