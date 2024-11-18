@@ -41,7 +41,6 @@
 #include <vector>
 
 #include "CoordinateConverter.h"
-#include "GlobalLocationConverter.h"
 #include "Vector3.h"
 #include "NodeVector.h"
 #include "BearingVector.h"
@@ -51,6 +50,11 @@ class LinerSegment
 private:
     std::shared_ptr<std::vector<Vector3>> _linerSegmentCache;
 public:
+    int LOD;
+    NodeVector& NodeStart;
+    std::vector<BearingVector>& _bearingVectorStart;
+    NodeVector& NodeEnd;
+    std::vector<BearingVector>& _bearingVectorEnd;
     LinerSegment(/* args */);
     ~LinerSegment();
 };
