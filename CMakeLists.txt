@@ -7,7 +7,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Find packages
+find_package(CURL REQUIRED)
 find_package(yaml-cpp REQUIRED)
+find_package(nlohmann_json REQUIRED)
 
 # Required Packages for GUI
 find_package(Vulkan REQUIRED)
@@ -66,7 +68,9 @@ target_include_directories(NodeBearingVectorSystemLib PUBLIC
 
 # Link libraries
 target_link_libraries(NodeBearingVectorSystemLib PUBLIC
+    CURL::libcurl
     yaml-cpp::yaml-cpp
+    nlohmann_json::nlohmann_json
     SDL2::SDL2
     SDL2::SDL2main
     Vulkan::Vulkan
