@@ -9,6 +9,9 @@
 #include "NodeVector.h"
 #include "BearingVector.h"
 
+/**
+ * @brief structure of SurfaceSegment.
+ */
 class SurfaceSegment
 {
 private:
