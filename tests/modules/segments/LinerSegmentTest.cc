@@ -8,7 +8,7 @@
 #include "CoordinateConverter.h" // Ensure this header exists and is correctly implemented
 #include "NodeVector.h"
 #include "BearingVector.h"
-#include "LinerSegment.h"
+#include "LinearSegment.h"
 
 // Test fixture for LinerSegment
 class LinerSegmentTest : public ::testing::Test {

@@ -4,7 +4,7 @@
 #include "ObjectManager.h"
 #include "NodeVector.h"
 #include "BearingVector.h"
-#include "LinerSegment.h"
+#include "LinearSegment.h"
 #include "Vector3.h"
 
 // Test Fixture for ObjectManager

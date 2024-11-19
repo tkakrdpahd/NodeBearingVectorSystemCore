@@ -1,4 +1,4 @@
-#include "LinerSegment.h"
+#include "LinearSegment.h"
 
 // 생성자
 LinerSegment::LinerSegment(const NodeVector& start, const std::vector<BearingVector>& bearingStart,

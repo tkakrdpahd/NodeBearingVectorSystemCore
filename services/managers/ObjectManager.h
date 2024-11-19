@@ -20,7 +20,7 @@
 
 #include "NodeVector.h"
 #include "BearingVector.h"
-#include "LinerSegment.h"
+#include "LinearSegment.h"
 
 /**
  * @brief ObjectManager for maintain the object information.
