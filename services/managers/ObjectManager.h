@@ -17,10 +17,18 @@
 #include <vector>
 #include <memory>
 #include <optional>
+
 #include "NodeVector.h"
 #include "BearingVector.h"
 #include "LinerSegment.h"
 
+/**
+ * @brief ObjectManager for maintain the object information.
+ * 
+ * @param index index of ObjectManager.
+ * @param max maximum value of object value; for normalized fixed point calculation.
+ * @param min minimum value of object value; for normalized fixed point calculation.
+ */
 class ObjectManager {
 private:
     int index;

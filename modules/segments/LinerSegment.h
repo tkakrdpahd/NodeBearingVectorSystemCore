@@ -14,6 +14,11 @@
  * 
  * NodeVector와 BearingVector를 사용하여 B-Spline 곡선을 생성하고,
  * 레벨 오브 디테일(LOD)에 따라 폴리곤 정점을 생성하는 기능을 제공합니다.
+ * 
+ * @param NodeStart Start point of node vector.
+ * @param BearingVectorStart Bearing vectors of starting node vector.
+ * @param NodeEnd Endpoint node vector.
+ * @param BearingVectorEnd Bearing vectors of Endpoint node vector.
  */
 class LinerSegment
 {
