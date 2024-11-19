@@ -18,6 +18,7 @@
 #include <memory>
 #include <optional>
 
+#include "Vector3.h"
 #include "NodeVector.h"
 #include "BearingVector.h"
 #include "LinearSegment.h"
