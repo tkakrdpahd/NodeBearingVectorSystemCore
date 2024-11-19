@@ -20,6 +20,7 @@ add_executable(test_nodebearingvectorsystem
   modules/vectors/NodeVectorTest.cc
   modules/vectors/BearingVectorTest.cc
   modules/segments/LinerSegmentTest.cc
+  modules/segments/SurfaceSegmentTest.cc
   services/managers/ObjectManagerTest.cc
 )
 
