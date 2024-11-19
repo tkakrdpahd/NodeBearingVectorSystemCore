@@ -1,37 +1,37 @@
-/** 
+/**
  * Vector3.h
  * Security: Confidential
  * Author: Minseok Doo
  * Created Date: Oct 24, 2024
- * Last Modified: Nov 13, 2024
+ * Last Modified: Nov 18, 2024
  */
+
 #ifndef VECTOR3_H
 #define VECTOR3_H
 
 #include <iostream>
-#include <cmath>  // Required for the sqrt() function
+#include <cmath> // sqrt, abs
 
-// Vector3 class with public member variables and methods
 class Vector3 {
 public:
     union {
-        float values[3];  // Internal storage as an array
-        struct {          // Retains x, y, z members
-            float x, y, z;
+        float values[3]; // Internal storage as an array
+        struct {
+            float x, y, z; // Retain x, y, z members
         };
     };
-    
-    // << 연산자 오버로딩
+
+    // Default and parameterized constructor
+    Vector3(float xVal = 0.0f, float yVal = 0.0f, float zVal = 0.0f) {
+        values[0] = xVal;
+        values[1] = yVal;
+        values[2] = zVal;
+    }
+
+    // Overloaded output operator
     friend std::ostream& operator<<(std::ostream& os, const Vector3& vec) {
         os << "(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
         return os;
-    }
-
-    // Constructor with default values
-    Vector3(float xVal = 0, float yVal = 0, float zVal = 0) {
-        values[0] = xVal;  // x
-        values[1] = yVal;  // y
-        values[2] = zVal;  // z
     }
 
     // Vector addition
@@ -39,14 +39,29 @@ public:
         return Vector3(x + v.x, y + v.y, z + v.z);
     }
 
+    Vector3& operator+=(const Vector3& v) {
+        x += v.x; y += v.y; z += v.z;
+        return *this;
+    }
+
     // Vector subtraction
     Vector3 operator-(const Vector3& v) const {
         return Vector3(x - v.x, y - v.y, z - v.z);
     }
 
+    Vector3& operator-=(const Vector3& v) {
+        x -= v.x; y -= v.y; z -= v.z;
+        return *this;
+    }
+
     // Scalar multiplication (Vector3 * float)
     Vector3 operator*(float scalar) const {
         return Vector3(x * scalar, y * scalar, z * scalar);
+    }
+
+    Vector3& operator*=(float scalar) {
+        x *= scalar; y *= scalar; z *= scalar;
+        return *this;
     }
 
     // Hadamard product (Vector3 * Vector3)
@@ -57,6 +72,23 @@ public:
     // Scalar division
     Vector3 operator/(float scalar) const {
         return Vector3(x / scalar, y / scalar, z / scalar);
+    }
+
+    Vector3& operator/=(float scalar) {
+        x /= scalar; y /= scalar; z /= scalar;
+        return *this;
+    }
+
+    // Equality operator
+    bool operator==(const Vector3& other) const {
+        return std::abs(x - other.x) < 1e-5f &&
+               std::abs(y - other.y) < 1e-5f &&
+               std::abs(z - other.z) < 1e-5f;
+    }
+
+    // Inequality operator
+    bool operator!=(const Vector3& other) const {
+        return !(*this == other);
     }
 
     // Dot product
@@ -83,7 +115,17 @@ public:
         float mag = magnitude();
         if (mag == 0.0f)
             return Vector3(0.0f, 0.0f, 0.0f);
-        return Vector3(x / mag, y / mag, z / mag);
+        return *this / mag;
+    }
+
+    // Check if the vector is zero
+    bool isZero() const {
+        return std::abs(x) < 1e-5f && std::abs(y) < 1e-5f && std::abs(z) < 1e-5f;
+    }
+
+    // Distance between two vectors
+    float distance(const Vector3& v) const {
+        return (*this - v).magnitude();
     }
 
     // Friend function for scalar multiplication (float * Vector3)

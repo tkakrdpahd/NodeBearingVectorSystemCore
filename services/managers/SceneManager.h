@@ -9,3 +9,6 @@
  * Purpose: Manage objectManager
  * CRUD objectManager instance
  */
+
+#include "ObjectManager.h"
+

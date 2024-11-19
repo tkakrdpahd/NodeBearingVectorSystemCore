@@ -11,5 +11,52 @@
  * Provides CRUD operations for Vector Attributes
  */
 
-// ObjectManager는 NodeVector, BearingVector, LinerSegment, SurfaceSegment를 관리함.
-// NodeVector, BearingVector, LinerSegment, SurfaceSegment는 연산을 관리하며, ObjectManager에 의존함.
+#ifndef OBJECTMANAGER_H
+#define OBJECTMANAGER_H
+
+#include <vector>
+#include <memory>
+#include <optional>
+#include "NodeVector.h"
+#include "BearingVector.h"
+#include "LinerSegment.h"
+
+class ObjectManager {
+private:
+    int index;
+    float max, min;
+    std::shared_ptr<std::vector<NodeVector>> nodeVectors;
+    std::shared_ptr<std::vector<BearingVector>> bearingVectors;
+    std::shared_ptr<std::vector<LinerSegment>> linerSegments;
+
+    // 특정 인덱스 찾기 (NodeVector)
+    template <typename T>
+    std::optional<size_t> findIndexById(const std::vector<T>& collection, int id) const;
+
+    // 특정 인덱스 찾기 (BearingVector - Vector.x 기준)
+    std::optional<size_t> findBearingVectorIndex(float id) const;
+
+public:
+    ObjectManager();
+    ~ObjectManager();
+
+    // NodeVector Methods
+    bool createNodeVector(int id, const Vector3& position);
+    std::optional<NodeVector> readNodeVector(int id) const;
+    bool updateNodeVector(int id, const Vector3& newPosition);
+    bool deleteNodeVector(int id);
+
+    // BearingVector Methods
+    bool createBearingVector(const NodeVector& node, const Vector3& force, const Vector3& vector);
+    std::optional<BearingVector> readBearingVector(float id) const;
+    bool updateBearingVector(float id, const Vector3& newForce);
+    bool deleteBearingVector(float id);
+
+    // LinerSegment Methods
+    bool createLinerSegment(const NodeVector& startNode, const std::vector<BearingVector>& startBearing,
+                            const NodeVector& endNode, const std::vector<BearingVector>& endBearing);
+    std::vector<LinerSegment> readAllLinerSegments() const;
+    bool deleteLinerSegment(const NodeVector& startNode, const NodeVector& endNode);
+};
+
+#endif // OBJECTMANAGER_H
