@@ -1,3 +1,0 @@
-REQUIRED
-sys/socket.h
-nlohmann-json
