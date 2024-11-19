@@ -1,4 +1,4 @@
-# NodeBearingVectorSystem
+# NodeBearingVectorSystemCore
 
 ## License
 This project is Dual Licensed:
