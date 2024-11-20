@@ -17,7 +17,7 @@
 #include <vector>
 #include <memory>
 #include <optional>
-#include <iostream> // operator<<를 위해 필요
+#include <iostream> // For operator<<
 
 #include "Vector3.h"
 #include "NodeVector.h"
@@ -38,21 +38,23 @@ class ObjectManager {
 private:
     int index;
     float max, min;
-    std::shared_ptr<std::vector<NodeVector>> nodeVectors;
-    std::shared_ptr<std::vector<BearingVector>> bearingVectors;
-    std::shared_ptr<std::vector<LinearSegment>> linearSegments;
-    std::shared_ptr<std::vector<SurfaceSegment>> surfaceSegments;
+    std::string name; // Added name member variable
+    std::unique_ptr<std::vector<NodeVector>> nodeVectors;
+    std::unique_ptr<std::vector<BearingVector>> bearingVectors;
+    std::unique_ptr<std::vector<LinearSegment>> linearSegments;
+    std::unique_ptr<std::vector<SurfaceSegment>> surfaceSegments;
 
     // 특정 인덱스 찾기 (NodeVector)
     template <typename T>
     std::optional<size_t> findIndexById(const std::vector<T>& collection, int id) const;
 
-    // 특정 인덱스 찾기 (BearingVector - Vector.x 기준)
-    std::optional<size_t> findBearingVectorIndex(float id) const;
-
 public:
-    ObjectManager();
+    ObjectManager(const std::string& managerName = "DefaultManager");
     ~ObjectManager();
+
+    // Getters and Setters for name
+    std::string GetName() const;
+    void SetName(const std::string& newName);
 
     // NodeVector Methods
     bool createNodeVector(int id, const Vector3& position);
@@ -62,9 +64,9 @@ public:
 
     // BearingVector Methods
     bool createBearingVector(const NodeVector& node, const Vector3& force, const Vector3& vector);
-    std::optional<BearingVector> readBearingVector(float id) const;
-    bool updateBearingVector(float id, const Vector3& newForce);
-    bool deleteBearingVector(float id);
+    std::optional<BearingVector> readBearingVector(const NodeVector& node) const;
+    bool updateBearingVector(const NodeVector& node, const Vector3& newForce);
+    bool deleteBearingVector(const NodeVector& node);
 
     // LinearSegment Methods
     bool createLinearSegment(const NodeVector& startNode, const std::vector<BearingVector>& startBearing,
@@ -77,7 +79,7 @@ public:
     std::vector<SurfaceSegment> readAllSurfaceSegments() const;
     bool deleteSurfaceSegment(int id);
 
-    // Manager Function
+    // Manager Functions
     void SaveAll();
     void DeleteAll();
 

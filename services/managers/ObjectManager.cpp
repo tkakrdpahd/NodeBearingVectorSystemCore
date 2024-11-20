@@ -14,17 +14,32 @@
 #include <algorithm>
 
 // 생성자
-ObjectManager::ObjectManager()
+ObjectManager::ObjectManager(const std::string& managerName)
     : index(0), max(0.0f), min(0.0f),
-      nodeVectors(std::make_shared<std::vector<NodeVector>>()),
-      bearingVectors(std::make_shared<std::vector<BearingVector>>()),
-      linearSegments(std::make_shared<std::vector<LinearSegment>>()),
-      surfaceSegments(std::make_shared<std::vector<SurfaceSegment>>())
+      name(managerName),
+      nodeVectors(std::make_unique<std::vector<NodeVector>>()),
+      bearingVectors(std::make_unique<std::vector<BearingVector>>()),
+      linearSegments(std::make_unique<std::vector<LinearSegment>>()),
+      surfaceSegments(std::make_unique<std::vector<SurfaceSegment>>())
 {
+    std::cout << "ObjectManager '" << name << "' 생성됨.\n";
 }
 
 // 소멸자
-ObjectManager::~ObjectManager() {}
+ObjectManager::~ObjectManager()
+{
+    std::cout << "ObjectManager '" << name << "' 소멸됨.\n";
+}
+
+// Getters and Setters for name
+std::string ObjectManager::GetName() const {
+    return name;
+}
+
+void ObjectManager::SetName(const std::string& newName) {
+    name = newName;
+    std::cout << "ObjectManager 이름이 '" << newName << "'으로 변경됨.\n";
+}
 
 // NodeVector Methods
 bool ObjectManager::createNodeVector(int id, const Vector3& position) {
@@ -72,10 +87,13 @@ bool ObjectManager::deleteNodeVector(int id) {
 
 // BearingVector Methods
 bool ObjectManager::createBearingVector(const NodeVector& node, const Vector3& force, const Vector3& vector) {
-    // 중복된 Vector.x가 있는지 확인
-    // 여기서는 Vector.x를 ID처럼 취급한다고 가정
-    if (findBearingVectorIndex(vector.x).has_value()) {
-        std::cerr << "BearingVector 추가 실패: 중복된 Vector.x " << vector.x << " 존재.\n";
+    // NodeVector의 ID를 기준으로 BearingVector의 중복 여부 확인
+    auto it = std::find_if(bearingVectors->begin(), bearingVectors->end(),
+                           [&](const BearingVector& bv) {
+                               return bv.Node.Index == node.Index;
+                           });
+    if (it != bearingVectors->end()) {
+        std::cerr << "BearingVector 추가 실패: Node ID " << node.Index << "에 대한 BearingVector 이미 존재.\n";
         return false;
     }
     bearingVectors->emplace_back(node, force, vector);
@@ -83,35 +101,44 @@ bool ObjectManager::createBearingVector(const NodeVector& node, const Vector3& f
     return true;
 }
 
-std::optional<BearingVector> ObjectManager::readBearingVector(float id) const {
-    auto it = findBearingVectorIndex(id);
-    if (it.has_value()) {
-        std::cout << "BearingVector 읽기 성공. ID: " << id << "\n";
-        return bearingVectors->at(it.value());
+std::optional<BearingVector> ObjectManager::readBearingVector(const NodeVector& node) const {
+    auto it = std::find_if(bearingVectors->begin(), bearingVectors->end(),
+                           [&](const BearingVector& bv) {
+                               return bv.Node.Index == node.Index;
+                           });
+    if (it != bearingVectors->end()) {
+        std::cout << "BearingVector 읽기 성공. Node ID: " << node.Index << "\n";
+        return *it;
     }
-    std::cerr << "BearingVector 읽기 실패: ID " << id << " 존재하지 않음.\n";
+    std::cerr << "BearingVector 읽기 실패: Node ID " << node.Index << "에 대한 BearingVector 존재하지 않음.\n";
     return std::nullopt;
 }
 
-bool ObjectManager::updateBearingVector(float id, const Vector3& newForce) {
-    auto it = findBearingVectorIndex(id);
-    if (it.has_value()) {
-        bearingVectors->at(it.value()).Force = newForce;
-        std::cout << "BearingVector 업데이트 성공. ID: " << id << ", New Force: " << newForce << "\n";
+bool ObjectManager::updateBearingVector(const NodeVector& node, const Vector3& newForce) {
+    auto it = std::find_if(bearingVectors->begin(), bearingVectors->end(),
+                           [&](BearingVector& bv) {
+                               return bv.Node.Index == node.Index;
+                           });
+    if (it != bearingVectors->end()) {
+        it->Force = newForce;
+        std::cout << "BearingVector 업데이트 성공. Node ID: " << node.Index << ", New Force: " << newForce << "\n";
         return true;
     }
-    std::cerr << "BearingVector 업데이트 실패: ID " << id << " 존재하지 않음.\n";
+    std::cerr << "BearingVector 업데이트 실패: Node ID " << node.Index << "에 대한 BearingVector 존재하지 않음.\n";
     return false;
 }
 
-bool ObjectManager::deleteBearingVector(float id) {
-    auto it = findBearingVectorIndex(id);
-    if (it.has_value()) {
-        bearingVectors->erase(bearingVectors->begin() + it.value());
-        std::cout << "BearingVector 삭제됨. ID: " << id << "\n";
+bool ObjectManager::deleteBearingVector(const NodeVector& node) {
+    auto it = std::find_if(bearingVectors->begin(), bearingVectors->end(),
+                           [&](const BearingVector& bv) {
+                               return bv.Node.Index == node.Index;
+                           });
+    if (it != bearingVectors->end()) {
+        bearingVectors->erase(it);
+        std::cout << "BearingVector 삭제됨. Node ID: " << node.Index << "\n";
         return true;
     }
-    std::cerr << "BearingVector 삭제 실패: ID " << id << " 존재하지 않음.\n";
+    std::cerr << "BearingVector 삭제 실패: Node ID " << node.Index << "에 대한 BearingVector 존재하지 않음.\n";
     return false;
 }
 
@@ -175,10 +202,25 @@ bool ObjectManager::deleteSurfaceSegment(int id) {
     return false;
 }
 
+// Manager Functions
+void ObjectManager::SaveAll() {
+    // JSON 변환 및 저장 로직 구현
+    // JsonConverter::ConvertToJson(*nodeVectors, *bearingVectors, *linearSegments, *surfaceSegments);
+    // std::cout << "모든 ObjectManager 데이터 저장됨.\n";
+}
+
+void ObjectManager::DeleteAll() {
+    nodeVectors->clear();
+    bearingVectors->clear();
+    linearSegments->clear();
+    surfaceSegments->clear();
+    std::cout << "모든 ObjectManager 데이터 삭제됨.\n";
+}
+
 // 출력 연산자 오버로드 정의
 std::ostream& operator<<(std::ostream& os, const ObjectManager& obj)
 {
-    os << "ObjectManager(Index: " << obj.index << ", Max: " << obj.max << ", Min: " << obj.min << ")\n";
+    os << "ObjectManager(Name: " << obj.name << ", Index: " << obj.index << ", Max: " << obj.max << ", Min: " << obj.min << ")\n";
     os << "  NodeVectors:\n";
     for (const auto& nv : *(obj.nodeVectors)) {
         os << "    " << nv << "\n";
@@ -196,14 +238,4 @@ std::ostream& operator<<(std::ostream& os, const ObjectManager& obj)
         os << "    " << ss << "\n";
     }
     return os;
-}
-
-// 특정 인덱스 찾기 (BearingVector - Vector.x 기준)
-std::optional<size_t> ObjectManager::findBearingVectorIndex(float id) const {
-    for (size_t i = 0; i < bearingVectors->size(); ++i) {
-        if (bearingVectors->at(i).Vector.x == id) {
-            return i;
-        }
-    }
-    return std::nullopt;
 }
