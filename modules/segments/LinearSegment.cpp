@@ -1,23 +1,31 @@
 // LinearSegment.cpp
 #include "LinearSegment.h"
 
-// 생성자
+// Constructor
 LinearSegment::LinearSegment(const NodeVector& start, const std::vector<BearingVector>& bearingStart,
-                           const NodeVector& end, const std::vector<BearingVector>& bearingEnd)
-    : NodeStart(start), BearingVectorStart(bearingStart),
-      NodeEnd(end), BearingVectorEnd(bearingEnd),
+                             const NodeVector& end, const std::vector<BearingVector>& bearingEnd,
+                             float alpha, int numSegments)
+    : index(0), // Initialize index (modify as needed)
+      LOD(1),    // Initialize LOD (default to 1)
+      NodeStart(start),
+      BearingVectorStart(bearingStart),
+      NodeEnd(end),
+      BearingVectorEnd(bearingEnd),
+      alpha(alpha),
+      numSegments(numSegments),
       _linearSegmentCache(std::make_shared<std::vector<Vector3>>())
 {
-    // 초기화 코드 (필요 시)
+    // Automatically perform calculations upon creation
+    CreateBSpline();
 }
 
-// 소멸자
+// Destructor
 LinearSegment::~LinearSegment()
 {
-    // 정리 코드 (필요 시)
+    // Cleanup code if necessary
 }
 
-// 이항 계수 계산
+// Binomial Coefficient Calculation
 float LinearSegment::BinomialCoefficient(int n, int k) const
 {
     if (k < 0 || k > n)
@@ -34,7 +42,7 @@ float LinearSegment::BinomialCoefficient(int n, int k) const
     return result;
 }
 
-// 베지어 곡선의 점 계산
+// Bezier Curve Point Calculation
 Vector3 LinearSegment::BezierPoint(const std::vector<Vector3>& controlPoints, float t) const
 {
     int n = static_cast<int>(controlPoints.size()) - 1;
@@ -48,7 +56,7 @@ Vector3 LinearSegment::BezierPoint(const std::vector<Vector3>& controlPoints, fl
     return point;
 }
 
-// 베지어 곡선의 1차 도함수 계산
+// Bezier Curve First Derivative
 Vector3 LinearSegment::BezierFirstDerivative(const std::vector<Vector3>& controlPoints, float t) const
 {
     int n = static_cast<int>(controlPoints.size()) - 1;
@@ -63,12 +71,12 @@ Vector3 LinearSegment::BezierFirstDerivative(const std::vector<Vector3>& control
     return derivative;
 }
 
-// 베지어 곡선의 2차 도함수 계산
+// Bezier Curve Second Derivative
 Vector3 LinearSegment::BezierSecondDerivative(const std::vector<Vector3>& controlPoints, float t) const
 {
     int n = static_cast<int>(controlPoints.size()) - 1;
     if (n < 2)
-        return Vector3(0.0f, 0.0f, 0.0f); // 2차 도함수는 정의되지 않음
+        return Vector3(0.0f, 0.0f, 0.0f); // Second derivative undefined
 
     Vector3 secondDerivative(0.0f, 0.0f, 0.0f);
     for (int i = 0; i < n - 1; ++i)
@@ -81,6 +89,7 @@ Vector3 LinearSegment::BezierSecondDerivative(const std::vector<Vector3>& contro
     return secondDerivative;
 }
 
+// Calculate Control Points
 std::vector<Vector3> LinearSegment::CalculateControlPoints(float alpha) const
 {
     std::vector<Vector3> controlPoints;
@@ -129,7 +138,7 @@ std::vector<Vector3> LinearSegment::CalculateControlPoints(float alpha) const
     {
         const auto& bearingEnd = BearingVectorEnd[j];
         Vector3 C_j = bearingEnd.Vector * bearingEnd.Force; // Hadamard product (B_j ⊗ F_j)
-        Vector3 Pj = NodeEnd.Vector + C_j; // 수정된 부분: '-'를 '+'로 변경
+        Vector3 Pj = NodeEnd.Vector + C_j; // Changed '-' to '+' as per comment
         controlPoints.push_back(Pj);
         std::cout << "Pj: " << Pj << std::endl;
     }
@@ -141,13 +150,13 @@ std::vector<Vector3> LinearSegment::CalculateControlPoints(float alpha) const
     return controlPoints;
 }
 
-// B-Spline 라인 생성
-void LinearSegment::CreateBSpline(float alpha, int numSegments)
+// Create B-Spline Line
+void LinearSegment::CreateBSpline()
 {
-    // 컨트롤 포인트 계산
+    // Calculate control points using the member variable alpha
     std::vector<Vector3> controlPoints = CalculateControlPoints(alpha);
 
-    // B-Spline 계산 (베지어 곡선으로 근사)
+    // Calculate B-Spline (approximated using Bezier curve)
     _linearSegmentCache->clear();
     for (int i = 0; i <= numSegments; ++i)
     {
@@ -157,12 +166,12 @@ void LinearSegment::CreateBSpline(float alpha, int numSegments)
     }
 }
 
-// LOD 기반 폴리곤 정점 생성
+// Create Polygon Vertices Based on LOD
 std::vector<Vector3> LinearSegment::CreatePolygonVertices(int lod) const
 {
     std::vector<Vector3> polygonVertices;
 
-    // LOD에 따른 정점 생성 로직 구현 (Equ. 26~29)
+    // Implement vertex creation logic based on LOD (Equ. 26~29)
     if (!_linearSegmentCache->empty())
     {
         int step = std::max(1, static_cast<int>(_linearSegmentCache->size()) / lod);
@@ -170,7 +179,7 @@ std::vector<Vector3> LinearSegment::CreatePolygonVertices(int lod) const
         {
             polygonVertices.push_back((*_linearSegmentCache)[i]);
         }
-        // 마지막 점이 이미 포함되지 않았을 경우에만 추가
+        // Add the last point if not already included
         const Vector3& lastPoint = _linearSegmentCache->back();
         if (polygonVertices.empty() ||
             std::abs(polygonVertices.back().x - lastPoint.x) > 1e-5 ||
@@ -184,23 +193,23 @@ std::vector<Vector3> LinearSegment::CreatePolygonVertices(int lod) const
     return polygonVertices;
 }
 
-// 캐시된 선분 데이터 가져오기
+// Get Cached Segment Data
 std::shared_ptr<std::vector<Vector3>> LinearSegment::GetLinearSegmentCache() const
 {
     return _linearSegmentCache;
 }
 
-// 곡률 계산 (Equ. 22)
+// Calculate Curvature (Equ. 22)
 float LinearSegment::CalculateCurvature(float t) const
 {
-    // 컨트롤 포인트 가져오기 (동일한 alpha 사용 필요)
-    std::vector<Vector3> controlPoints = CalculateControlPoints(0.5f); // alpha = 0.5f 임의 설정
+    // Retrieve control points (ensure the same alpha is used)
+    std::vector<Vector3> controlPoints = CalculateControlPoints(alpha);
 
-    // 1차 및 2차 도함수 계산
+    // Calculate first and second derivatives
     Vector3 B_prime = BezierFirstDerivative(controlPoints, t);
     Vector3 B_double_prime = BezierSecondDerivative(controlPoints, t);
 
-    // 곡률 계산: |B''(t) × B'(t)| / |B'(t)|^3 (Equ. 22)
+    // Calculate curvature: |B''(t) × B'(t)| / |B'(t)|^3 (Equ. 22)
     Vector3 crossProd = B_double_prime.cross(B_prime);
     float numerator = crossProd.magnitude();
     float denominator = powf(B_prime.magnitude(), 3);
@@ -211,7 +220,47 @@ float LinearSegment::CalculateCurvature(float t) const
     return numerator / denominator;
 }
 
-// 출력 연산자 오버로드 정의
+// Setter for LOD
+void LinearSegment::SetLOD(int newLOD)
+{
+    LOD = newLOD;
+    // Automatically perform calculations upon update
+    CreateBSpline();
+}
+
+// Setter for StartNode
+void LinearSegment::SetStartNode(const NodeVector& newStart)
+{
+    NodeStart = newStart;
+    // Automatically perform calculations upon update
+    CreateBSpline();
+}
+
+// Setter for EndNode
+void LinearSegment::SetEndNode(const NodeVector& newEnd)
+{
+    NodeEnd = newEnd;
+    // Automatically perform calculations upon update
+    CreateBSpline();
+}
+
+// Setter for alpha
+void LinearSegment::SetAlpha(float newAlpha)
+{
+    alpha = newAlpha;
+    // Automatically perform calculations upon update
+    CreateBSpline();
+}
+
+// Setter for numSegments
+void LinearSegment::SetNumSegments(int newNumSegments)
+{
+    numSegments = newNumSegments;
+    // Automatically perform calculations upon update
+    CreateBSpline();
+}
+
+// Output Operator Overload Definition
 std::ostream& operator<<(std::ostream& os, const LinearSegment& ls)
 {
     os << "LinearSegment(StartNode: " << ls.getStartNode() << ", EndNode: " << ls.getEndNode() << ")";
