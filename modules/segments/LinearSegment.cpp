@@ -1,23 +1,23 @@
 #include "LinearSegment.h"
 
 // 생성자
-LinerSegment::LinerSegment(const NodeVector& start, const std::vector<BearingVector>& bearingStart,
+LinearSegment::LinearSegment(const NodeVector& start, const std::vector<BearingVector>& bearingStart,
                            const NodeVector& end, const std::vector<BearingVector>& bearingEnd)
     : NodeStart(start), BearingVectorStart(bearingStart),
       NodeEnd(end), BearingVectorEnd(bearingEnd),
-      _linerSegmentCache(std::make_shared<std::vector<Vector3>>())
+      _linearSegmentCache(std::make_shared<std::vector<Vector3>>())
 {
     // 초기화 코드 (필요 시)
 }
 
 // 소멸자
-LinerSegment::~LinerSegment()
+LinearSegment::~LinearSegment()
 {
     // 정리 코드 (필요 시)
 }
 
 // 이항 계수 계산
-float LinerSegment::BinomialCoefficient(int n, int k) const
+float LinearSegment::BinomialCoefficient(int n, int k) const
 {
     if (k < 0 || k > n)
         return 0.0f;
@@ -34,7 +34,7 @@ float LinerSegment::BinomialCoefficient(int n, int k) const
 }
 
 // 베지어 곡선의 점 계산
-Vector3 LinerSegment::BezierPoint(const std::vector<Vector3>& controlPoints, float t) const
+Vector3 LinearSegment::BezierPoint(const std::vector<Vector3>& controlPoints, float t) const
 {
     int n = static_cast<int>(controlPoints.size()) - 1;
     Vector3 point(0.0f, 0.0f, 0.0f);
@@ -48,7 +48,7 @@ Vector3 LinerSegment::BezierPoint(const std::vector<Vector3>& controlPoints, flo
 }
 
 // 베지어 곡선의 1차 도함수 계산
-Vector3 LinerSegment::BezierFirstDerivative(const std::vector<Vector3>& controlPoints, float t) const
+Vector3 LinearSegment::BezierFirstDerivative(const std::vector<Vector3>& controlPoints, float t) const
 {
     int n = static_cast<int>(controlPoints.size()) - 1;
     Vector3 derivative(0.0f, 0.0f, 0.0f);
@@ -63,7 +63,7 @@ Vector3 LinerSegment::BezierFirstDerivative(const std::vector<Vector3>& controlP
 }
 
 // 베지어 곡선의 2차 도함수 계산
-Vector3 LinerSegment::BezierSecondDerivative(const std::vector<Vector3>& controlPoints, float t) const
+Vector3 LinearSegment::BezierSecondDerivative(const std::vector<Vector3>& controlPoints, float t) const
 {
     int n = static_cast<int>(controlPoints.size()) - 1;
     if (n < 2)
@@ -80,7 +80,7 @@ Vector3 LinerSegment::BezierSecondDerivative(const std::vector<Vector3>& control
     return secondDerivative;
 }
 
-std::vector<Vector3> LinerSegment::CalculateControlPoints(float alpha) const
+std::vector<Vector3> LinearSegment::CalculateControlPoints(float alpha) const
 {
     std::vector<Vector3> controlPoints;
 
@@ -141,36 +141,36 @@ std::vector<Vector3> LinerSegment::CalculateControlPoints(float alpha) const
 }
 
 // B-Spline 라인 생성
-void LinerSegment::CreateBSpline(float alpha, int numSegments)
+void LinearSegment::CreateBSpline(float alpha, int numSegments)
 {
     // 컨트롤 포인트 계산
     std::vector<Vector3> controlPoints = CalculateControlPoints(alpha);
 
     // B-Spline 계산 (베지어 곡선으로 근사)
-    _linerSegmentCache->clear();
+    _linearSegmentCache->clear();
     for (int i = 0; i <= numSegments; ++i)
     {
         float t = static_cast<float>(i) / numSegments;
         Vector3 point = BezierPoint(controlPoints, t);
-        _linerSegmentCache->push_back(point);
+        _linearSegmentCache->push_back(point);
     }
 }
 
 // LOD 기반 폴리곤 정점 생성
-std::vector<Vector3> LinerSegment::CreatePolygonVertices(int lod) const
+std::vector<Vector3> LinearSegment::CreatePolygonVertices(int lod) const
 {
     std::vector<Vector3> polygonVertices;
 
     // LOD에 따른 정점 생성 로직 구현 (Equ. 26~29)
-    if (!_linerSegmentCache->empty())
+    if (!_linearSegmentCache->empty())
     {
-        int step = std::max(1, static_cast<int>(_linerSegmentCache->size()) / lod);
-        for (size_t i = 0; i < _linerSegmentCache->size(); i += step)
+        int step = std::max(1, static_cast<int>(_linearSegmentCache->size()) / lod);
+        for (size_t i = 0; i < _linearSegmentCache->size(); i += step)
         {
-            polygonVertices.push_back((*_linerSegmentCache)[i]);
+            polygonVertices.push_back((*_linearSegmentCache)[i]);
         }
         // 마지막 점이 이미 포함되지 않았을 경우에만 추가
-        const Vector3& lastPoint = _linerSegmentCache->back();
+        const Vector3& lastPoint = _linearSegmentCache->back();
         if (polygonVertices.empty() ||
             std::abs(polygonVertices.back().x - lastPoint.x) > 1e-5 ||
             std::abs(polygonVertices.back().y - lastPoint.y) > 1e-5 ||
@@ -184,13 +184,13 @@ std::vector<Vector3> LinerSegment::CreatePolygonVertices(int lod) const
 }
 
 // 캐시된 선분 데이터 가져오기
-std::shared_ptr<std::vector<Vector3>> LinerSegment::GetLinerSegmentCache() const
+std::shared_ptr<std::vector<Vector3>> LinearSegment::GetLinearSegmentCache() const
 {
-    return _linerSegmentCache;
+    return _linearSegmentCache;
 }
 
 // 곡률 계산 (Equ. 22)
-float LinerSegment::CalculateCurvature(float t) const
+float LinearSegment::CalculateCurvature(float t) const
 {
     // 컨트롤 포인트 가져오기 (동일한 alpha 사용 필요)
     std::vector<Vector3> controlPoints = CalculateControlPoints(0.5f); // alpha = 0.5f 임의 설정

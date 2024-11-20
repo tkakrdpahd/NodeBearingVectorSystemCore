@@ -1,5 +1,5 @@
-#ifndef LINERSEGMENT_H
-#define LINERSEGMENT_H
+#ifndef LinearSegment_H
+#define LinearSegment_H
 
 #include <vector>
 #include <memory>
@@ -10,7 +10,7 @@
 #include "BearingVector.h"
 
 /**
- * @brief LinerSegment 클래스
+ * @brief LinearSegment 클래스
  * 
  * NodeVector와 BearingVector를 사용하여 B-Spline 곡선을 생성하고,
  * 레벨 오브 디테일(LOD)에 따라 폴리곤 정점을 생성하는 기능을 제공합니다.
@@ -20,7 +20,7 @@
  * @param NodeEnd Endpoint node vector.
  * @param BearingVectorEnd Bearing vectors of Endpoint node vector.
  */
-class LinerSegment
+class LinearSegment
 {
 public:
     // 컨트롤 포인트 계산 (Equ. 17~21)
@@ -40,7 +40,7 @@ public:
 
 private:
     // 캐시된 선분 데이터
-    std::shared_ptr<std::vector<Vector3>> _linerSegmentCache;
+    std::shared_ptr<std::vector<Vector3>> _linearSegmentCache;
 
 public:
     // 시작 노드 및 베어링 벡터
@@ -52,9 +52,9 @@ public:
     std::vector<BearingVector> BearingVectorEnd;
 
     // 생성자 및 소멸자
-    LinerSegment(const NodeVector& start, const std::vector<BearingVector>& bearingStart,
+    LinearSegment(const NodeVector& start, const std::vector<BearingVector>& bearingStart,
                 const NodeVector& end, const std::vector<BearingVector>& bearingEnd);
-    ~LinerSegment();
+    ~LinearSegment();
 
     // B-Spline 라인 생성
     void CreateBSpline(float alpha, int numSegments);
@@ -63,10 +63,10 @@ public:
     std::vector<Vector3> CreatePolygonVertices(int lod) const;
 
     // 캐시된 선분 데이터 가져오기
-    std::shared_ptr<std::vector<Vector3>> GetLinerSegmentCache() const;
+    std::shared_ptr<std::vector<Vector3>> GetLinearSegmentCache() const;
 
     // 곡률 계산 함수
     float CalculateCurvature(float t) const;
 };
 
-#endif // LINERSEGMENT_H
+#endif // LinearSegment_H

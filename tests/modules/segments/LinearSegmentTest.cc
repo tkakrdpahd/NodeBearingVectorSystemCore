@@ -1,4 +1,4 @@
-// LinerSegmentTest.cc
+// LinearSegmentTest.cc
 
 #include <gtest/gtest.h>
 #include <cmath> // for std::abs
@@ -10,8 +10,8 @@
 #include "BearingVector.h"
 #include "LinearSegment.h"
 
-// Test fixture for LinerSegment
-class LinerSegmentTest : public ::testing::Test {
+// Test fixture for LinearSegment
+class LinearSegmentTest : public ::testing::Test {
 protected:
     // SetUp is called before each test
     void SetUp() override {
@@ -29,8 +29,8 @@ protected:
         BearingVector bv2(*endNode, Vector3(0.0f, 0.0f, -1.0f), Vector3(0.0f, 0.0f, -1.0f));
         BearingVectorEnd.push_back(bv2);
 
-        // Create LinerSegment
-        segment = new LinerSegment(*startNode, BearingVectorStart, *endNode, BearingVectorEnd);
+        // Create LinearSegment
+        segment = new LinearSegment(*startNode, BearingVectorStart, *endNode, BearingVectorEnd);
     }
 
     // TearDown is called after each test
@@ -45,11 +45,11 @@ protected:
     NodeVector* endNode;
     std::vector<BearingVector> BearingVectorStart;
     std::vector<BearingVector> BearingVectorEnd;
-    LinerSegment* segment;
+    LinearSegment* segment;
 };
 
-// Test the creation of LinerSegment
-TEST_F(LinerSegmentTest, CreationTest) {
+// Test the creation of LinearSegment
+TEST_F(LinearSegmentTest, CreationTest) {
     EXPECT_EQ(segment->NodeStart.Index, 1);
     EXPECT_EQ(segment->NodeEnd.Index, 2);
     EXPECT_EQ(segment->BearingVectorStart.size(), 1);
@@ -57,7 +57,7 @@ TEST_F(LinerSegmentTest, CreationTest) {
 }
 
 // Test control points calculation
-TEST_F(LinerSegmentTest, ControlPointsTest) {
+TEST_F(LinearSegmentTest, ControlPointsTest) {
     // Assuming alpha = 0.5
     float alpha = 0.5f;
     std::vector<Vector3> controlPoints = segment->CalculateControlPoints(alpha);
@@ -87,7 +87,7 @@ TEST_F(LinerSegmentTest, ControlPointsTest) {
 }
 
 // Test B-Spline creation
-TEST_F(LinerSegmentTest, BSplineCreationTest) {
+TEST_F(LinearSegmentTest, BSplineCreationTest) {
     float alpha = 0.5f;
     int numSegments = 100;
 
@@ -102,11 +102,11 @@ TEST_F(LinerSegmentTest, BSplineCreationTest) {
 
     // For numSegments=100, t=0.0, 0.01, ...,1.0
     // Here, we just check the number of points
-    EXPECT_EQ(segment->GetLinerSegmentCache()->size(), static_cast<size_t>(numSegments + 1));
+    EXPECT_EQ(segment->GetLinearSegmentCache()->size(), static_cast<size_t>(numSegments + 1));
 }
 
 // Test Polygon Vertices creation
-TEST_F(LinerSegmentTest, PolygonVerticesTest) {
+TEST_F(LinearSegmentTest, PolygonVerticesTest) {
     float alpha = 0.5f;
     int numSegments = 100;
     int lod = 10;
@@ -120,7 +120,7 @@ TEST_F(LinerSegmentTest, PolygonVerticesTest) {
 }
 
 // Test Curvature calculation
-TEST_F(LinerSegmentTest, CurvatureTest) {
+TEST_F(LinearSegmentTest, CurvatureTest) {
     float alpha = 0.5f;
     int numSegments = 100;
     segment->CreateBSpline(alpha, numSegments);

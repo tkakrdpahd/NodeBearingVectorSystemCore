@@ -7,7 +7,7 @@
  * Last Modified: Nov 11, 2024
  * 
  * Purpose of Class:
- * Purpose: Index buffer for Linersegment and Surface
+ * Purpose: Index buffer for LinearSegment and Surface
  * 
  * Equations:
  */

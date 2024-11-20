@@ -14,7 +14,7 @@
 ObjectManager::ObjectManager()
     : nodeVectors(std::make_shared<std::vector<NodeVector>>()),
       bearingVectors(std::make_shared<std::vector<BearingVector>>()),
-      linerSegments(std::make_shared<std::vector<LinerSegment>>()) {}
+      LinearSegments(std::make_shared<std::vector<LinearSegment>>()) {}
 
 ObjectManager::~ObjectManager() {}
 
@@ -93,24 +93,24 @@ bool ObjectManager::deleteBearingVector(float id) {
     return true;
 }
 
-// LinerSegment Methods
-bool ObjectManager::createLinerSegment(const NodeVector& startNode, const std::vector<BearingVector>& startBearing,
+// LinearSegment Methods
+bool ObjectManager::createLinearSegment(const NodeVector& startNode, const std::vector<BearingVector>& startBearing,
                                        const NodeVector& endNode, const std::vector<BearingVector>& endBearing) {
-    linerSegments->emplace_back(startNode, startBearing, endNode, endBearing);
+    LinearSegments->emplace_back(startNode, startBearing, endNode, endBearing);
     return true;
 }
 
-std::vector<LinerSegment> ObjectManager::readAllLinerSegments() const {
-    return *linerSegments;
+std::vector<LinearSegment> ObjectManager::readAllLinearSegments() const {
+    return *LinearSegments;
 }
 
-bool ObjectManager::deleteLinerSegment(const NodeVector& startNode, const NodeVector& endNode) {
-    auto it = std::remove_if(linerSegments->begin(), linerSegments->end(),
-                             [&](const LinerSegment& segment) {
+bool ObjectManager::deleteLinearSegment(const NodeVector& startNode, const NodeVector& endNode) {
+    auto it = std::remove_if(LinearSegments->begin(), LinearSegments->end(),
+                             [&](const LinearSegment& segment) {
                                  return segment.NodeStart.Index == startNode.Index &&
                                         segment.NodeEnd.Index == endNode.Index;
                              });
-    if (it == linerSegments->end()) return false;
-    linerSegments->erase(it, linerSegments->end());
+    if (it == LinearSegments->end()) return false;
+    LinearSegments->erase(it, LinearSegments->end());
     return true;
 }

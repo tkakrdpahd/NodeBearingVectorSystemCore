@@ -62,29 +62,29 @@ TEST_F(ObjectManagerTest, BearingVectorCRUD) {
     EXPECT_FALSE(manager.deleteBearingVector(5.0f)); // Already deleted
 }
 
-// Test LinerSegment operations
-TEST_F(ObjectManagerTest, LinerSegmentOperations) {
-    // Create LinerSegment
+// Test LinearSegment operations
+TEST_F(ObjectManagerTest, LinearSegmentOperations) {
+    // Create LinearSegment
     NodeVector startNode(1, Vector3(0.0f, 0.0f, 0.0f));
     NodeVector endNode(2, Vector3(1.0f, 1.0f, 1.0f));
     std::vector<BearingVector> startBearing = { BearingVector(startNode, Vector3(0.0f, 0.0f, 1.0f), Vector3(0.1f, 0.1f, 0.1f)) };
     std::vector<BearingVector> endBearing = { BearingVector(endNode, Vector3(0.0f, 0.0f, -1.0f), Vector3(0.2f, 0.2f, 0.2f)) };
 
-    EXPECT_TRUE(manager.createLinerSegment(startNode, startBearing, endNode, endBearing));
+    EXPECT_TRUE(manager.createLinearSegment(startNode, startBearing, endNode, endBearing));
 
-    // Read all LinerSegments
-    auto linerSegments = manager.readAllLinerSegments();
-    EXPECT_EQ(linerSegments.size(), 1);
-    EXPECT_EQ(linerSegments[0].NodeStart.Index, 1);
-    EXPECT_EQ(linerSegments[0].NodeEnd.Index, 2);
+    // Read all LinearSegments
+    auto LinearSegments = manager.readAllLinearSegments();
+    EXPECT_EQ(LinearSegments.size(), 1);
+    EXPECT_EQ(LinearSegments[0].NodeStart.Index, 1);
+    EXPECT_EQ(LinearSegments[0].NodeEnd.Index, 2);
 
-    // Delete LinerSegment
-    EXPECT_TRUE(manager.deleteLinerSegment(startNode, endNode));
-    linerSegments = manager.readAllLinerSegments();
-    EXPECT_TRUE(linerSegments.empty());
+    // Delete LinearSegment
+    EXPECT_TRUE(manager.deleteLinearSegment(startNode, endNode));
+    LinearSegments = manager.readAllLinearSegments();
+    EXPECT_TRUE(LinearSegments.empty());
 
     // Delete non-existing segment
-    EXPECT_FALSE(manager.deleteLinerSegment(startNode, endNode));
+    EXPECT_FALSE(manager.deleteLinearSegment(startNode, endNode));
 }
 
 // Test mixed operations
@@ -97,17 +97,17 @@ TEST_F(ObjectManagerTest, MixedOperations) {
     NodeVector node1(1, Vector3(1.0f, 2.0f, 3.0f));
     EXPECT_TRUE(manager.createBearingVector(node1, Vector3(0.1f, 0.2f, 0.3f), Vector3(5.0f, 0.0f, 0.0f)));
 
-    // Add LinerSegment
+    // Add LinearSegment
     NodeVector node2(2, Vector3(4.0f, 5.0f, 6.0f));
     std::vector<BearingVector> bearingStart = { BearingVector(node1, Vector3(0.0f, 0.0f, 1.0f), Vector3(0.1f, 0.1f, 0.1f)) };
     std::vector<BearingVector> bearingEnd = { BearingVector(node2, Vector3(0.0f, 0.0f, -1.0f), Vector3(0.2f, 0.2f, 0.2f)) };
 
-    EXPECT_TRUE(manager.createLinerSegment(node1, bearingStart, node2, bearingEnd));
-    auto linerSegments = manager.readAllLinerSegments();
-    EXPECT_EQ(linerSegments.size(), 1);
+    EXPECT_TRUE(manager.createLinearSegment(node1, bearingStart, node2, bearingEnd));
+    auto LinearSegments = manager.readAllLinearSegments();
+    EXPECT_EQ(LinearSegments.size(), 1);
 
     // Cleanup
-    EXPECT_TRUE(manager.deleteLinerSegment(node1, node2));
+    EXPECT_TRUE(manager.deleteLinearSegment(node1, node2));
     EXPECT_TRUE(manager.deleteNodeVector(1));
     EXPECT_TRUE(manager.deleteNodeVector(2));
     EXPECT_TRUE(manager.deleteBearingVector(5.0f));

@@ -37,7 +37,7 @@ private:
     float max, min;
     std::shared_ptr<std::vector<NodeVector>> nodeVectors;
     std::shared_ptr<std::vector<BearingVector>> bearingVectors;
-    std::shared_ptr<std::vector<LinerSegment>> linerSegments;
+    std::shared_ptr<std::vector<LinearSegment>> LinearSegments;
     std::shared_ptr<std::vector<SurfaceSegment>> _surfaceSegment;
 
     // 특정 인덱스 찾기 (NodeVector)
@@ -63,11 +63,11 @@ public:
     bool updateBearingVector(float id, const Vector3& newForce);
     bool deleteBearingVector(float id);
 
-    // LinerSegment Methods
-    bool createLinerSegment(const NodeVector& startNode, const std::vector<BearingVector>& startBearing,
+    // LinearSegment Methods
+    bool createLinearSegment(const NodeVector& startNode, const std::vector<BearingVector>& startBearing,
                             const NodeVector& endNode, const std::vector<BearingVector>& endBearing);
-    std::vector<LinerSegment> readAllLinerSegments() const;
-    bool deleteLinerSegment(const NodeVector& startNode, const NodeVector& endNode);
+    std::vector<LinearSegment> readAllLinearSegments() const;
+    bool deleteLinearSegment(const NodeVector& startNode, const NodeVector& endNode);
 };
 
 #endif // OBJECTMANAGER_H
