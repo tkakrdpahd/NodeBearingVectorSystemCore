@@ -4,18 +4,23 @@
  * Security: Top Secret
  * Author: Minseok Doo
  * Date: Nov 13, 2024
- * Last Modified: Nov 13, 2024
+ * Last Modified: Nov 19, 2024
  * 
  * Purpose: Manage objectManager
  * CRUD objectManager instance
  */
 
+#include <string>
+#include <iostream>
+#include <vector>
 #include "ObjectManager.h"
 
 class SceneManager
 {
 private:
-    /* data */
+    std::string user;
+    std::string date;
+    std::shared_ptr<std::vector<ObjectManager>> _objects;
 public:
     SceneManager(/* args */);
     ~SceneManager();
