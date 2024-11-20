@@ -25,6 +25,8 @@
 #include "LinearSegment.h"
 #include "SurfaceSegment.h"
 
+#include "JsonConverter.h"
+
 /**
  * @brief ObjectManager for maintaining the object information.
  * 
@@ -74,6 +76,10 @@ public:
     bool createSurfaceSegment(int id);
     std::vector<SurfaceSegment> readAllSurfaceSegments() const;
     bool deleteSurfaceSegment(int id);
+
+    // Manager Function
+    void SaveAll();
+    void DeleteAll();
 
     // 출력 연산자 오버로드 선언
     friend std::ostream& operator<<(std::ostream& os, const ObjectManager& obj);

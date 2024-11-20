@@ -27,14 +27,9 @@ public:
     bool UpdateSceneManager();
     bool DeleteSceneManager();
 
+    // Manager Function
+    void SaveAll();
+
     SceneManager(/* args */);
     ~SceneManager();
 };
-
-SceneManager::SceneManager(/* args */)
-{
-}
-
-SceneManager::~SceneManager()
-{
-}
