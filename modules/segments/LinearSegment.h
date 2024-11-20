@@ -1,9 +1,11 @@
-#ifndef LinearSegment_H
-#define LinearSegment_H
+// LinearSegment.h
+#ifndef LINEARSEGMENT_H
+#define LINEARSEGMENT_H
 
 #include <vector>
 #include <memory>
 #include <cmath>
+#include <iostream> // operator<<를 위해 추가
 
 #include "Vector3.h"
 #include "NodeVector.h"
@@ -67,6 +69,13 @@ public:
 
     // 곡률 계산 함수
     float CalculateCurvature(float t) const;
+
+    // Getter 함수 추가
+    const NodeVector& getStartNode() const { return NodeStart; }
+    const NodeVector& getEndNode() const { return NodeEnd; }
+
+    // 출력 연산자 오버로드 선언
+    friend std::ostream& operator<<(std::ostream& os, const LinearSegment& ls);
 };
 
-#endif // LinearSegment_H
+#endif // LINEARSEGMENT_H

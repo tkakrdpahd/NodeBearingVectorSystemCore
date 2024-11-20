@@ -117,6 +117,9 @@ public:
      * @return Shared pointer to the vector of BearingVector.
      */
     std::shared_ptr<std::vector<BearingVector>> getBearings() const;
+    
+    // 출력 연산자 오버로드 선언
+    friend std::ostream& operator<<(std::ostream& os, const SurfaceSegment& ss);
 };
 
 #endif // SURFACESEGMENT_H

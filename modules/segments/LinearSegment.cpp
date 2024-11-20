@@ -1,3 +1,4 @@
+// LinearSegment.cpp
 #include "LinearSegment.h"
 
 // 생성자
@@ -208,4 +209,11 @@ float LinearSegment::CalculateCurvature(float t) const
         return 0.0f;
 
     return numerator / denominator;
+}
+
+// 출력 연산자 오버로드 정의
+std::ostream& operator<<(std::ostream& os, const LinearSegment& ls)
+{
+    os << "LinearSegment(StartNode: " << ls.getStartNode() << ", EndNode: " << ls.getEndNode() << ")";
+    return os;
 }

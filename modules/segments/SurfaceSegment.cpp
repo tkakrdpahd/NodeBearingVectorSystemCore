@@ -88,3 +88,13 @@ std::shared_ptr<std::vector<NodeVector>> SurfaceSegment::getNodes() const {
 std::shared_ptr<std::vector<BearingVector>> SurfaceSegment::getBearings() const {
     return bearings;
 }
+
+// 출력 연산자 오버로드 정의
+std::ostream& operator<<(std::ostream& os, const SurfaceSegment& ss)
+{
+    os << "SurfaceSegment(ID: " << ss.getIndex() 
+       << ", LOD: " << ss.getLOD() 
+       << ", isValid: " << (ss.isSegmentValid() ? "true" : "false") 
+       << ")";
+    return os;
+}
