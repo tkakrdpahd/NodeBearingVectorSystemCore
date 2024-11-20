@@ -55,10 +55,16 @@ public:
     // 출력 연산자 오버로드 선언
     friend std::ostream& operator<<(std::ostream& os, const LinearSegment& ls);
 
-    // Getter 함수 추가
-    int GetIndex() const { return index; }
-    const NodeVector& getStartNode() const { return NodeStart; }
-    const NodeVector& getEndNode() const { return NodeEnd; }
+    // CRUD Parameters
+    int ReadLOD() const { return LOD; }
+    int UpdateLOD() const { return LOD; }
+
+    const NodeVector& getStartNode() const { return NodeStart; } // Read StartNode
+    const NodeVector& UpdateStartNode() const { return NodeStart; } // Update StartNode
+
+    const NodeVector& getEndNode() const { return NodeEnd; } // Read EndNode
+    const NodeVector& UpdateEndNode() const { return NodeEnd; } // Update EndNode
+
     std::shared_ptr<std::vector<Vector3>> GetLinearSegmentCache() const;
 
     // Calculation
