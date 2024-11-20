@@ -75,8 +75,8 @@ TEST_F(ObjectManagerTest, LinearSegmentOperations) {
     // Read all LinearSegments
     auto LinearSegments = manager.readAllLinearSegments();
     EXPECT_EQ(LinearSegments.size(), 1);
-    EXPECT_EQ(LinearSegments[0].NodeStart.Index, 1);
-    EXPECT_EQ(LinearSegments[0].NodeEnd.Index, 2);
+    EXPECT_EQ(LinearSegments[0].getStartNode().Index, 1);
+    EXPECT_EQ(LinearSegments[0].getEndNode().Index, 2);
 
     // Delete LinearSegment
     EXPECT_TRUE(manager.deleteLinearSegment(startNode, endNode));
