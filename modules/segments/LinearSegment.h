@@ -1,11 +1,14 @@
-// LinearSegment.h
+/**
+ * LinearSegment.h
+ * 
+ */
 #ifndef LINEARSEGMENT_H
 #define LINEARSEGMENT_H
 
 #include <vector>
 #include <memory>
 #include <cmath>
-#include <iostream> // operator<<를 위해 추가
+#include <iostream>
 
 #include "Vector3.h"
 #include "NodeVector.h"
@@ -52,22 +55,16 @@ public:
     Vector3 BezierPoint(const std::vector<Vector3>& controlPoints, float t) const;
     // 컨트롤 포인트 계산 (Equ. 17~21)
     std::vector<Vector3> CalculateControlPoints(float alpha) const;
-
     // 이항 계수 계산 (n choose k)
     float BinomialCoefficient(int n, int k) const;
-
     // 베지어 곡선의 1차 도함수 계산
     Vector3 BezierFirstDerivative(const std::vector<Vector3>& controlPoints, float t) const;
-
     // 베지어 곡선의 2차 도함수 계산
     Vector3 BezierSecondDerivative(const std::vector<Vector3>& controlPoints, float t) const;
-
     // B-Spline 라인 생성
     void CreateBSpline(float alpha, int numSegments);
-
     // LOD 기반 폴리곤 정점 생성
     std::vector<Vector3> CreatePolygonVertices(int lod) const;
-
     // 곡률 계산 함수
     float CalculateCurvature(float t) const;
 };
