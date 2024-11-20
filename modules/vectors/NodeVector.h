@@ -26,6 +26,12 @@ struct NodeVector
 
     // (int, Vector3) constructor
     NodeVector(int nodeId, const Vector3& vec) : Index(nodeId), Vector(vec) {}
+
+    // 출력 연산자 오버로드
+    friend std::ostream& operator<<(std::ostream& os, const NodeVector& nv) {
+        os << "NodeVector(Index: " << nv.Index << ", Vector: " << nv.Vector << ")";
+        return os;
+    }
 };
 
 #endif // NODEVECTOR_H

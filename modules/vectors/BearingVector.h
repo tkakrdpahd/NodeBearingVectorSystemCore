@@ -43,6 +43,12 @@ struct BearingVector
     // 매개변수 생성자
     BearingVector(const NodeVector& node, const Vector3& force, const Vector3& vec) 
         : Node(node), Force(force), Vector(vec) {}
+
+    // 출력 연산자 오버로드
+    friend std::ostream& operator<<(std::ostream& os, const BearingVector& bv) {
+        os << "BearingVector(Node: " << bv.Node << ", Force: " << bv.Force << ", Vector: " << bv.Vector << ")";
+        return os;
+    }
 };
 
 #endif // BEARINGVECTOR_H
