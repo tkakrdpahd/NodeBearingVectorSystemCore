@@ -20,8 +20,13 @@ class SceneManager
 private:
     std::string user;
     std::string date;
-    std::shared_ptr<std::vector<ObjectManager>> _objects;
+    std::shared_ptr<std::vector<ObjectManager>> _objects; // ObjectManager container
 public:
+    bool CreateSceneManager();
+    bool ReadSceneManager();
+    bool UpdateSceneManager();
+    bool DeleteSceneManager();
+
     SceneManager(/* args */);
     ~SceneManager();
 };

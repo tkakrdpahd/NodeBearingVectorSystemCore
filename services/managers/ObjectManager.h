@@ -22,6 +22,7 @@
 #include "NodeVector.h"
 #include "BearingVector.h"
 #include "LinearSegment.h"
+#include "SurfaceSegment.h"
 
 /**
  * @brief ObjectManager for maintain the object information.
@@ -37,6 +38,7 @@ private:
     std::shared_ptr<std::vector<NodeVector>> nodeVectors;
     std::shared_ptr<std::vector<BearingVector>> bearingVectors;
     std::shared_ptr<std::vector<LinerSegment>> linerSegments;
+    std::shared_ptr<std::vector<SurfaceSegment>> _surfaceSegment;
 
     // 특정 인덱스 찾기 (NodeVector)
     template <typename T>
