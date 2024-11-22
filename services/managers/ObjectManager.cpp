@@ -19,8 +19,8 @@ ObjectManager::ObjectManager(const std::string& managerName)
       name(managerName),
       nodeVectors(std::make_unique<std::vector<NodeVector>>()),
       bearingVectors(std::make_unique<std::vector<BearingVector>>()),
-      linearSegments(std::make_unique<std::vector<LinearSegment>>()),
-      surfaceSegments(std::make_unique<std::vector<SurfaceSegment>>())
+      linearSegments(std::make_unique<std::vector<LinearSegment>>())
+    //   surfaceSegments(std::make_unique<std::vector<SurfaceSegment>>())
 {
     std::cout << "ObjectManager '" << name << "' 생성됨.\n";
 }
@@ -170,37 +170,37 @@ bool ObjectManager::deleteLinearSegment(const NodeVector& startNode, const NodeV
 }
 
 // SurfaceSegment Methods
-bool ObjectManager::createSurfaceSegment(int id) {
-    // 중복된 ID가 있는지 확인
-    for (const auto& ss : *surfaceSegments) {
-        if (ss.getIndex() == id) {
-            std::cerr << "SurfaceSegment 추가 실패: 중복된 ID " << id << " 존재.\n";
-            return false;
-        }
-    }
-    surfaceSegments->emplace_back();
-    surfaceSegments->back().setIndex(id);
-    std::cout << "SurfaceSegment 추가됨. ID: " << id << "\n";
-    return true;
-}
+// bool ObjectManager::createSurfaceSegment(int id) {
+//     // 중복된 ID가 있는지 확인
+//     for (const auto& ss : *surfaceSegments) {
+//         if (ss.getIndex() == id) {
+//             std::cerr << "SurfaceSegment 추가 실패: 중복된 ID " << id << " 존재.\n";
+//             return false;
+//         }
+//     }
+//     surfaceSegments->emplace_back();
+//     surfaceSegments->back().setIndex(id);
+//     std::cout << "SurfaceSegment 추가됨. ID: " << id << "\n";
+//     return true;
+// }
 
-std::vector<SurfaceSegment> ObjectManager::readAllSurfaceSegments() const {
-    return *surfaceSegments;
-}
+// std::vector<SurfaceSegment> ObjectManager::readAllSurfaceSegments() const {
+//     return *surfaceSegments;
+// }
 
-bool ObjectManager::deleteSurfaceSegment(int id) {
-    auto it = std::find_if(surfaceSegments->begin(), surfaceSegments->end(),
-                           [&](const SurfaceSegment& ss) {
-                               return ss.getIndex() == id;
-                           });
-    if (it != surfaceSegments->end()) {
-        surfaceSegments->erase(it);
-        std::cout << "SurfaceSegment 삭제됨. ID: " << id << "\n";
-        return true;
-    }
-    std::cerr << "SurfaceSegment 삭제 실패: ID " << id << " 존재하지 않음.\n";
-    return false;
-}
+// bool ObjectManager::deleteSurfaceSegment(int id) {
+//     auto it = std::find_if(surfaceSegments->begin(), surfaceSegments->end(),
+//                            [&](const SurfaceSegment& ss) {
+//                                return ss.getIndex() == id;
+//                            });
+//     if (it != surfaceSegments->end()) {
+//         surfaceSegments->erase(it);
+//         std::cout << "SurfaceSegment 삭제됨. ID: " << id << "\n";
+//         return true;
+//     }
+//     std::cerr << "SurfaceSegment 삭제 실패: ID " << id << " 존재하지 않음.\n";
+//     return false;
+// }
 
 // Manager Functions
 void ObjectManager::SaveAll() {
@@ -213,7 +213,7 @@ void ObjectManager::DeleteAll() {
     nodeVectors->clear();
     bearingVectors->clear();
     linearSegments->clear();
-    surfaceSegments->clear();
+    // surfaceSegments->clear();
     std::cout << "모든 ObjectManager 데이터 삭제됨.\n";
 }
 
@@ -233,9 +233,9 @@ std::ostream& operator<<(std::ostream& os, const ObjectManager& obj)
     for (const auto& ls : *(obj.linearSegments)) {
         os << "    " << ls << "\n";
     }
-    os << "  SurfaceSegments:\n";
-    for (const auto& ss : *(obj.surfaceSegments)) {
-        os << "    " << ss << "\n";
-    }
+    // os << "  SurfaceSegments:\n";
+    // for (const auto& ss : *(obj.surfaceSegments)) {
+    //     os << "    " << ss << "\n";
+    // }
     return os;
 }

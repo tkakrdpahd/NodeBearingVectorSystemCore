@@ -23,7 +23,7 @@
 #include "NodeVector.h"
 #include "BearingVector.h"
 #include "LinearSegment.h"
-#include "SurfaceSegment.h"
+// #include "SurfaceSegment.h"
 
 #include "JsonConverter.h"
 
@@ -42,7 +42,7 @@ private:
     std::unique_ptr<std::vector<NodeVector>> nodeVectors;
     std::unique_ptr<std::vector<BearingVector>> bearingVectors;
     std::unique_ptr<std::vector<LinearSegment>> linearSegments;
-    std::unique_ptr<std::vector<SurfaceSegment>> surfaceSegments;
+    // std::unique_ptr<std::vector<SurfaceSegment>> surfaceSegments;
 
     // 특정 인덱스 찾기 (NodeVector)
     template <typename T>
@@ -75,9 +75,9 @@ public:
     bool deleteLinearSegment(const NodeVector& startNode, const NodeVector& endNode);
 
     // SurfaceSegment Methods
-    bool createSurfaceSegment(int id);
-    std::vector<SurfaceSegment> readAllSurfaceSegments() const;
-    bool deleteSurfaceSegment(int id);
+    // bool createSurfaceSegment(int id);
+    // std::vector<SurfaceSegment> readAllSurfaceSegments() const;
+    // bool deleteSurfaceSegment(int id);
 
     // Manager Functions
     void SaveAll();
