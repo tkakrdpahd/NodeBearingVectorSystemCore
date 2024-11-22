@@ -35,11 +35,7 @@ struct BearingVector
     Vector3 Force;
     Vector3 Vector;
 
-    // 기본 생성자
-    // NodeVector을 기본값으로 초기화
-    BearingVector() : Node(0, Vector3()), Force(), Vector() {}
-
-    // 매개변수 생성자
+    // Constructor
     BearingVector(const NodeVector& node, const Vector3& force, const Vector3& vec) 
         : Node(node), Force(force), Vector(vec) {}
 
