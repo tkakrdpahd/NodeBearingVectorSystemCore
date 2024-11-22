@@ -31,7 +31,13 @@
 #include "Vector3.h"
 #include "NodeVector.h"
 #include "BearingVector.h"
+#include "LinearSegment.h"
 
+/**
+ * @brief SurfaceSegment class
+ * 
+ * Expected input [std::vector<NodeVector> NodeVector node01, NodeVector node02, NodeVector node03 ..., std::vector<BearingVector> BearingVector bearing01, bearing02, bearing03 ...]
+ */
 class SurfaceSegment
 {
 private:

@@ -33,6 +33,11 @@
 #include "NodeVector.h"
 #include "BearingVector.h"
 
+/**
+ * @brief LinearSegment class
+ * 
+ * Expected input [int lod, std::vector<NodeVector> NodeVector StartNode, NodeVector EndNode, std::vector<BearingVector> BearingVector StartNodeBearing, EndNodeBearing]
+ */
 class LinearSegment
 {
 private:
