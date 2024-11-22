@@ -29,6 +29,7 @@
 #include <memory>
 #include "NodeVector.h"
 #include "BearingVector.h"
+#include "LinearSegment.h"
 
 /**
  * @brief Class representing a SurfaceSegment.
@@ -41,6 +42,7 @@ private:
     bool isValid; ///< Indicates if the segment's data is up-to-date
     std::shared_ptr<std::vector<NodeVector>> nodes; ///< Nodes associated with the surface segment
     std::shared_ptr<std::vector<BearingVector>> bearings; ///< Bearings associated with the surface segment
+    std::shared_ptr<std::vector<Vector3>> _surfaceSegmentCache;
 
     /**
      * @brief Internal method to validate the segment data.
