@@ -40,12 +40,4 @@ public:
     ~SurfaceSegment();
 };
 
-SurfaceSegment::SurfaceSegment(/* args */)
-{
-}
-
-SurfaceSegment::~SurfaceSegment()
-{
-}
-
 #endif // SURFACESEGMENT_H
