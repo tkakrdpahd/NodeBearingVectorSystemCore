@@ -29,7 +29,7 @@ private:
                std::function<void(const HttpResponsePtr&)>&& callback) {
                 // 응답 생성
                 auto resp = HttpResponse::newHttpResponse();
-                resp->setBody(std::string("Hello, World!")); // std::string으로 변환
+                resp->setBody(std::string("Hello, World!"));
                 callback(resp);
             },
             {Get});

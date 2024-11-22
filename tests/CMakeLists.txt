@@ -19,6 +19,8 @@ enable_testing()
 add_executable(test_nodebearingvectorsystem 
   modules/entities/NodeVectorTest.cc
   modules/entities/BearingVectorTest.cc
+  modules/operators/CoordinateConverterTest.cc
+  modules/segments/LinearSegmentTest.cc
 )
 
 # Link against GTest and the main library
