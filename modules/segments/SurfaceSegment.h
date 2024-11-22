@@ -31,30 +31,21 @@
 #include "BearingVector.h"
 #include "LinearSegment.h"
 
-/**
- * @brief Class representing a SurfaceSegment.
- */
 class SurfaceSegment
 {
 private:
-    int index; ///< Surface index
-    bool isValid; ///< Indicates if the segment's data is up-to-date
-
-    std::shared_ptr<std::vector<NodeVector>> nodes; ///< Nodes associated with the surface segment
-    std::vector<LinearSegment>& _linearSegmentCache;
-    std::shared_ptr<std::vector<Vector3>> _surfaceSegmentCache;
+    /* data */
 public:
-    public:
-    /**
-     * @brief Constructs a SurfaceSegment with a reference to a LinearSegment cache.
-     * 
-     * @param linearSegmentCache Reference to a vector of LinearSegment objects.
-     */
-    SurfaceSegment(std::vector<LinearSegment>& linearSegmentCache)
-        : _linearSegmentCache(linearSegmentCache)
-    {
-        // 초기화가 필요한 다른 멤버들이 있다면 여기서 처리할 수 있습니다.
-    }
+    SurfaceSegment(/* args */);
+    ~SurfaceSegment();
 };
+
+SurfaceSegment::SurfaceSegment(/* args */)
+{
+}
+
+SurfaceSegment::~SurfaceSegment()
+{
+}
 
 #endif // SURFACESEGMENT_H
