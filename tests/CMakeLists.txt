@@ -1,13 +1,9 @@
-# tests/CMakeLists.txt
-
-# --------------------
-# Google Test Setting
-# --------------------
-# 이미 googletest는 루트 CMakeLists.txt에서 add_subdirectory 했으므로, 여기서는 추가하지 않습니다.
-
+# ----------------------------
+# Google Test
+# ----------------------------
 enable_testing()
 
-# Add the test executable
+# 테스트 실행 파일 추가
 add_executable(test_nodebearingvectorsystem 
   modules/entities/Vector3Test.cc
   modules/entities/NodeVectorTest.cc
@@ -26,11 +22,10 @@ target_include_directories(test_nodebearingvectorsystem PRIVATE
 
 # Link against GTest와 메인 라이브러리
 target_link_libraries(test_nodebearingvectorsystem PRIVATE
-    gtest
-    gtest_main
+    GTest::gtest_main # gtest_main만 링크
     NodeBearingVectorSystemLib
 )
 
-# 자동으로 테스트를 등록하고 실행되도록 설정
+# 자동으로 테스트 등록 및 실행
 include(GoogleTest)
 gtest_discover_tests(test_nodebearingvectorsystem)

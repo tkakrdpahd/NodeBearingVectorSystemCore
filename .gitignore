@@ -2,5 +2,6 @@
 .DS_Store
 .vscode
 
+vcpkg_installed
 # CMake build file
 build

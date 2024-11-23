@@ -1,0 +1,13 @@
+{
+    "name": "node-bearing-vector-system",
+    "version": "0.0.1",
+    "dependencies": [
+        "drogon",
+        "gtest",
+        "imgui",
+        "nlohmann-json",
+        "opengl",
+        "sdl2",
+        "vulkan"
+    ]
+}

@@ -1,61 +1,44 @@
-# Root CMakeLists.txt
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.20)
 project(NodeBearingVectorSystem VERSION 0.1 LANGUAGES CXX)
 
-# Set C++ standard
+# C++ 표준 설정
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # ----------------------------
-# Find required dependencies
+# vcpkg 설정
+# ----------------------------
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    message(FATAL_ERROR "CMAKE_TOOLCHAIN_FILE must be set to the vcpkg toolchain file.")
+endif()
+
+# ----------------------------
+# 종속성 패키지 찾기
 # ----------------------------
 find_package(CURL REQUIRED)
-find_package(nlohmann_json REQUIRED)
-find_package(Drogon REQUIRED)
-
-# Required Packages for GUI
+find_package(nlohmann_json CONFIG REQUIRED)
+find_package(Drogon CONFIG REQUIRED)
 find_package(Vulkan REQUIRED)
-find_package(SDL2 REQUIRED)
+find_package(SDL2 CONFIG REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(imgui CONFIG REQUIRED)
+find_package(GTest CONFIG REQUIRED)
 
-# ------------------------------
-# Include GoogleTest submodule
-# ------------------------------
-add_subdirectory(external/googletest)
-
-# ---------------------------
-# Collect source files
-# ---------------------------
+# ----------------------------
+# 소스 파일 수집
+# ----------------------------
 file(GLOB_RECURSE SOURCES
     "modules/*.cpp"
     "services/*.cpp"
-    "services/**/*.cpp"
 )
 
-# ---------------------------
-# Include ImGui sources directly
-# ---------------------------
-set(IMGUI_SOURCES
-    ${PROJECT_SOURCE_DIR}/external/imgui-master/imgui.cpp
-    ${PROJECT_SOURCE_DIR}/external/imgui-master/imgui_widgets.cpp
-    ${PROJECT_SOURCE_DIR}/external/imgui-master/imgui_tables.cpp
-    ${PROJECT_SOURCE_DIR}/external/imgui-master/imgui_draw.cpp
-    ${PROJECT_SOURCE_DIR}/external/imgui-master/imgui_demo.cpp
+# ----------------------------
+# 라이브러리 추가
+# ----------------------------
+add_library(NodeBearingVectorSystemLib STATIC ${SOURCES})
 
-    # Vulkan & SDL2 backends setting for imgui
-    ${PROJECT_SOURCE_DIR}/external/imgui-master/backends/imgui_impl_sdl2.cpp
-    ${PROJECT_SOURCE_DIR}/external/imgui-master/backends/imgui_impl_vulkan.cpp
-)
-
-# Create a library from the sources
-add_library(NodeBearingVectorSystemLib ${SOURCES} ${IMGUI_SOURCES})
-
-# ----------------
-# Include headers
-# ----------------
+# 헤더 파일 경로 설정
 target_include_directories(NodeBearingVectorSystemLib PUBLIC
-    ${PROJECT_SOURCE_DIR}/external/imgui-master
-    ${PROJECT_SOURCE_DIR}/external/imgui-master/backends
-
     ${PROJECT_SOURCE_DIR}/modules/entities
     ${PROJECT_SOURCE_DIR}/modules/operators
     ${PROJECT_SOURCE_DIR}/modules/segments
@@ -65,38 +48,34 @@ target_include_directories(NodeBearingVectorSystemLib PUBLIC
     ${PROJECT_SOURCE_DIR}/services/managers
 )
 
-# Link libraries
+# 링크 라이브러리 설정
 target_link_libraries(NodeBearingVectorSystemLib PUBLIC
     CURL::libcurl
     nlohmann_json::nlohmann_json
     Drogon::Drogon
-
+    Vulkan::Vulkan
     SDL2::SDL2
     SDL2::SDL2main
-    Vulkan::Vulkan
+    OpenGL::GL
+    imgui::imgui
 )
 
-# Platform-specific libraries
+# 플랫폼 별 설정
 if (APPLE)
     find_library(METAL_LIBRARY Metal)
     if (METAL_LIBRARY)
         target_link_libraries(NodeBearingVectorSystemLib PRIVATE ${METAL_LIBRARY})
-        target_compile_options(NodeBearingVectorSystemLib PRIVATE -Wno-error -Wno-missing-include-dirs)
+    else()
+        message(WARNING "Metal framework not found on macOS. This may impact rendering performance.")
     endif()
 endif()
 
-if (WIN32)
-    find_library(D3D11_LIBRARY d3d11)
-    find_library(DXGI_LIBRARY dxgi)
-    if (D3D11_LIBRARY AND DXGI_LIBRARY)
-        target_link_libraries(NodeBearingVectorSystemLib PRIVATE ${D3D11_LIBRARY} ${DXGI_LIBRARY})
-    endif()
-endif()
-
-# -------------------------------
-# Add the main executable
-# -------------------------------
+# ----------------------------
+# 실행 파일 추가
+# ----------------------------
 add_executable(${PROJECT_NAME} main.cpp)
+
+# 메인 실행 파일에 라이브러리 연결
 target_link_libraries(${PROJECT_NAME} PRIVATE NodeBearingVectorSystemLib)
 
 # -------------------------------
