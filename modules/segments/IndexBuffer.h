@@ -15,11 +15,3 @@ public:
     IndexBuffer(/* args */);
     ~IndexBuffer();
 };
-
-IndexBuffer::IndexBuffer(/* args */)
-{
-}
-
-IndexBuffer::~IndexBuffer()
-{
-}
