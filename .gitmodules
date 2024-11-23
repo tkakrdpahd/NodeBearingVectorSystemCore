@@ -1,5 +1,5 @@
 [submodule "imgui-master"]
-	path = imgui-master
+	path = external/imgui-master
 	url = https://github.com/ocornut/imgui.git
 [submodule "external/googletest"]
 	path = external/googletest
