@@ -3,15 +3,7 @@
 # --------------------
 # Google Test Setting
 # --------------------
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-)
-# For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
+# 이미 googletest는 루트 CMakeLists.txt에서 add_subdirectory 했으므로, 여기서는 추가하지 않습니다.
 
 enable_testing()
 
@@ -24,11 +16,21 @@ add_executable(test_nodebearingvectorsystem
   modules/segments/LinearSegmentTest.cc
 )
 
-# Link against GTest and the main library
-target_link_libraries(test_nodebearingvectorsystem 
-    GTest::gtest_main 
+# Include directories
+target_include_directories(test_nodebearingvectorsystem PRIVATE
+    ${PROJECT_SOURCE_DIR}/modules/entities
+    ${PROJECT_SOURCE_DIR}/modules/operators
+    ${PROJECT_SOURCE_DIR}/modules/segments
+    ${PROJECT_SOURCE_DIR}/modules/vectors
+)
+
+# Link against GTest와 메인 라이브러리
+target_link_libraries(test_nodebearingvectorsystem PRIVATE
+    gtest
+    gtest_main
     NodeBearingVectorSystemLib
 )
 
+# 자동으로 테스트를 등록하고 실행되도록 설정
 include(GoogleTest)
 gtest_discover_tests(test_nodebearingvectorsystem)

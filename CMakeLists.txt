@@ -6,7 +6,9 @@ project(NodeBearingVectorSystem VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Find packages
+# ----------------------------
+# Find required dependencies
+# ----------------------------
 find_package(CURL REQUIRED)
 find_package(nlohmann_json REQUIRED)
 find_package(Drogon REQUIRED)
@@ -15,30 +17,33 @@ find_package(Drogon REQUIRED)
 find_package(Vulkan REQUIRED)
 find_package(SDL2 REQUIRED)
 
-# ------------------------------------
-# NodeBearingVectorSystem class files
-# ------------------------------------
+# ------------------------------
+# Include GoogleTest submodule
+# ------------------------------
+add_subdirectory(external/googletest)
+
+# ---------------------------
+# Collect source files
+# ---------------------------
 file(GLOB_RECURSE SOURCES
     "modules/*.cpp"
-    "modules/**/*.cpp"
     "services/*.cpp"
     "services/**/*.cpp"
 )
 
-# -------------------------------------
-# imgui setting; https://dearimgui.com
-# -------------------------------------
+# ---------------------------
+# Include ImGui sources directly
+# ---------------------------
 set(IMGUI_SOURCES
-    # Root fils form Dear ImGui
-    ${PROJECT_SOURCE_DIR}/imgui-master/imgui.cpp
-    ${PROJECT_SOURCE_DIR}/imgui-master/imgui_widgets.cpp
-    ${PROJECT_SOURCE_DIR}/imgui-master/imgui_tables.cpp
-    ${PROJECT_SOURCE_DIR}/imgui-master/imgui_draw.cpp
-    ${PROJECT_SOURCE_DIR}/imgui-master/imgui_demo.cpp
+    ${PROJECT_SOURCE_DIR}/external/imgui-master/imgui.cpp
+    ${PROJECT_SOURCE_DIR}/external/imgui-master/imgui_widgets.cpp
+    ${PROJECT_SOURCE_DIR}/external/imgui-master/imgui_tables.cpp
+    ${PROJECT_SOURCE_DIR}/external/imgui-master/imgui_draw.cpp
+    ${PROJECT_SOURCE_DIR}/external/imgui-master/imgui_demo.cpp
 
     # Vulkan & SDL2 backends setting for imgui
-    ${PROJECT_SOURCE_DIR}/imgui-master/backends/imgui_impl_sdl2.cpp
-    ${PROJECT_SOURCE_DIR}/imgui-master/backends/imgui_impl_vulkan.cpp
+    ${PROJECT_SOURCE_DIR}/external/imgui-master/backends/imgui_impl_sdl2.cpp
+    ${PROJECT_SOURCE_DIR}/external/imgui-master/backends/imgui_impl_vulkan.cpp
 )
 
 # Create a library from the sources
@@ -48,8 +53,8 @@ add_library(NodeBearingVectorSystemLib ${SOURCES} ${IMGUI_SOURCES})
 # Include headers
 # ----------------
 target_include_directories(NodeBearingVectorSystemLib PUBLIC
-    ${PROJECT_SOURCE_DIR}/imgui-master
-    ${PROJECT_SOURCE_DIR}/imgui-master/backends
+    ${PROJECT_SOURCE_DIR}/external/imgui-master
+    ${PROJECT_SOURCE_DIR}/external/imgui-master/backends
 
     ${PROJECT_SOURCE_DIR}/modules/entities
     ${PROJECT_SOURCE_DIR}/modules/operators
@@ -88,12 +93,13 @@ if (WIN32)
     endif()
 endif()
 
-# --------------------------------------
-# Setting for subdirectory; google test
-# --------------------------------------
-# Add the main executable and link the library
+# -------------------------------
+# Add the main executable
+# -------------------------------
 add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE NodeBearingVectorSystemLib)
 
+# -------------------------------
 # Add tests subdirectory
+# -------------------------------
 add_subdirectory(tests)
