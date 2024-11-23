@@ -18,4 +18,13 @@
 #include "LinearSegment.h"
 #include "SurfaceSegment.h"
 
+class SegmentManager
+{
+private:
+    /* data */
+public:
+    SegmentManager(/* args */);
+    ~SegmentManager();
+};
+
 #endif // SCENEMANAGER_H

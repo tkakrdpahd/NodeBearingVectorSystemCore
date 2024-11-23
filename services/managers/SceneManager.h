@@ -13,6 +13,8 @@
 #ifndef SCENEMANAGER_H
 #define SCENEMANAGER_H
 
+#include "ObjectManager.h"
+
 class SceneManager
 {
 private:
@@ -21,13 +23,5 @@ public:
     SceneManager(/* args */);
     ~SceneManager();
 };
-
-SceneManager::SceneManager(/* args */)
-{
-}
-
-SceneManager::~SceneManager()
-{
-}
 
 #endif // SCENEMANAGER_H

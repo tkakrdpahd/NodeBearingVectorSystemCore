@@ -14,6 +14,11 @@
 #ifndef OBJECTMANAGER_H
 #define OBJECTMANAGER_H
 
+#include "Vector3.h"
+#include "NodeVector.h"
+#include "BearingVector.h"
+#include "SegmentManager.h"
+
 class ObjectManager
 {
 private:
@@ -22,13 +27,5 @@ public:
     ObjectManager(/* args */);
     ~ObjectManager();
 };
-
-ObjectManager::ObjectManager(/* args */)
-{
-}
-
-ObjectManager::~ObjectManager()
-{
-}
 
 #endif // OBJECTMANAGER_H
