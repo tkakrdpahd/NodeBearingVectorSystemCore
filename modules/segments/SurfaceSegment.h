@@ -43,6 +43,10 @@ class SurfaceSegment
 private:
     /* data */
 public:
+    void CreateLinearSegment(); // Seperate node/bearing vector input as linearSegment.
+    void GetLinearSegmentCache();
+    void CreateSurfaceVectors();
+
     SurfaceSegment(/* args */);
     ~SurfaceSegment();
 };

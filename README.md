@@ -40,6 +40,14 @@ NodeVector(int index, const Vector3& vec);
 BearingVector(const NodeVector& node, const Vector3& force, const Vector3& vec);
 ```
 
+### ObjectManager
+#### ERD
+![ObjectManager ERD](./img/ObjectManagerERD.svg)
+
+## Flow
+
+
+
 ## License
 This project is dual-licensed under the following terms:
 
