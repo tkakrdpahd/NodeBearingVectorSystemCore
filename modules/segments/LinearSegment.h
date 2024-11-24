@@ -28,17 +28,16 @@
 
 #include <vector>
 #include <memory>
-// Google Test Access
+#include <ostream>
 #include <gtest/gtest_prod.h>
 
+#include "Vertex.h"
 #include "Vector3.h"
-#include "NodeVector.h"
-#include "BearingVector.h"
 
 /**
  * @brief LinearSegment class
  * 
- * Expected input [int lod, std::vector<NodeVector> NodeVector StartNode, NodeVector EndNode, std::vector<BearingVector> BearingVector StartNodeBearing, EndNodeBearing]
+ * Expected input [const Vertex& StartVertex, const Vertex& EndVertex, float alpha, int numSegments]
  */
 class LinearSegment
 {
@@ -46,10 +45,8 @@ private:
     // Parameters to be saved.
     int index;
     int LOD;
-    NodeVector NodeStart;
-    std::vector<BearingVector> BearingVectorStart;
-    NodeVector NodeEnd;
-    std::vector<BearingVector> BearingVectorEnd;
+    const Vertex& startVertex;
+    const Vertex& endVertex;
 
     // New Parameters for automatic calculations
     float alpha;
@@ -58,31 +55,27 @@ private:
     // Cached Sampling data.
     std::shared_ptr<std::vector<Vector3>> _linearSegmentCache;
 
-    // Calculation
+    // Calculation Methods
     Vector3 BezierPoint(const std::vector<Vector3>& controlPoints, float t) const;
-    std::vector<Vector3> CalculateControlPoints(float alpha) const;
     float BinomialCoefficient(int n, int k) const;
     Vector3 BezierFirstDerivative(const std::vector<Vector3>& controlPoints, float t) const;
     Vector3 BezierSecondDerivative(const std::vector<Vector3>& controlPoints, float t) const;
     void CreateBSpline(); // Modified to use member variables
     std::vector<Vector3> CreatePolygonVertices(int lod) const;
-    float CalculateCurvature(float t) const;
 
-    // FRIEND_TEST 선언 추가
+    // FRIEND_TEST declarations
     FRIEND_TEST(LinearSegmentTest, ControlPointsTest);
     FRIEND_TEST(LinearSegmentTest, BSplineCreationTest);
     FRIEND_TEST(LinearSegmentTest, PolygonVerticesTest);
     FRIEND_TEST(LinearSegmentTest, CurvatureTest);
     FRIEND_TEST(LinearSegmentTest, AutomaticBSplineOnAlphaUpdate);
     FRIEND_TEST(LinearSegmentTest, AutomaticBSplineOnNumSegmentsUpdate);
-    FRIEND_TEST(LinearSegmentTest, AutomaticBSplineOnStartNodeUpdate);
-    FRIEND_TEST(LinearSegmentTest, AutomaticBSplineOnEndNodeUpdate);
+    FRIEND_TEST(LinearSegmentTest, AutomaticBSplineOnStartVertexUpdate);
+    FRIEND_TEST(LinearSegmentTest, AutomaticBSplineOnEndVertexUpdate);
 
 public:
     // Constructors and Destructors
-    LinearSegment(const NodeVector& start, const std::vector<BearingVector>& bearingStart,
-                const NodeVector& end, const std::vector<BearingVector>& bearingEnd,
-                float alpha = 0.5f, int numSegments = 100);
+    LinearSegment(const Vertex& start, const Vertex& end, float alpha = 0.5f, int numSegments = 100);
     ~LinearSegment();
 
     // Output Operator Overload Declaration
@@ -90,18 +83,22 @@ public:
 
     // Getter Methods
     int ReadLOD() const { return LOD; }
-    const NodeVector& getStartNode() const { return NodeStart; } // Read StartNode
-    const NodeVector& getEndNode() const { return NodeEnd; } // Read EndNode
+
+    // Vertex 기반 Getter 메소드 추가
+    const Vertex& GetStartVertex() const { return startVertex; }
+    const Vertex& GetEndVertex() const { return endVertex; }
 
     // Setter Methods
     void SetLOD(int newLOD);
-    void SetStartNode(const NodeVector& newStart);
-    void SetEndNode(const NodeVector& newEnd);
     void SetAlpha(float newAlpha);
     void SetNumSegments(int newNumSegments);
 
     // Access Cached Data
     std::shared_ptr<std::vector<Vector3>> GetLinearSegmentCache() const;
+
+    // Public Calculation Methods
+    std::vector<Vector3> CalculateControlPoints(float alpha) const;
+    float CalculateCurvature(float t) const;
 };
 
 #endif // LINEARSEGMENT_H

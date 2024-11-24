@@ -1,16 +1,15 @@
 // LinearSegment.cpp
+
 #include "LinearSegment.h"
+#include <cmath>
+#include <iostream>
 
 // Constructor
-LinearSegment::LinearSegment(const NodeVector& start, const std::vector<BearingVector>& bearingStart,
-                             const NodeVector& end, const std::vector<BearingVector>& bearingEnd,
-                             float alpha, int numSegments)
+LinearSegment::LinearSegment(const Vertex& start, const Vertex& end, float alpha, int numSegments)
     : index(0), // Initialize index (modify as needed)
       LOD(1),    // Initialize LOD (default to 1)
-      NodeStart(start),
-      BearingVectorStart(bearingStart),
-      NodeEnd(end),
-      BearingVectorEnd(bearingEnd),
+      startVertex(start),
+      endVertex(end),
       alpha(alpha),
       numSegments(numSegments),
       _linearSegmentCache(std::make_shared<std::vector<Vector3>>())
@@ -94,27 +93,29 @@ std::vector<Vector3> LinearSegment::CalculateControlPoints(float alpha) const
 {
     std::vector<Vector3> controlPoints;
 
-    // P0 = N1.Vector (Equ. 17)
-    controlPoints.push_back(NodeStart.Vector);
+    // P0 = StartVertex's NodeVector (Equ. 17)
+    controlPoints.push_back(startVertex.ReadNodeVector().Vector);
     std::cout << "P0: " << controlPoints.back() << std::endl;
 
     // P1 ~ P_D1 (Equ. 18)
+    const std::vector<BearingVector>& startBearings = startVertex.ReadBearingVectorList();
     std::vector<Vector3> C_start;
-    for (const auto& bearing : BearingVectorStart)
+    for (const auto& bearing : startBearings)
     {
-        Vector3 C_i = bearing.Vector * bearing.Force; // Hadamard product (B_i ⊗ F_i)
+        Vector3 C_i = bearing.Vector * bearing.Force.magnitude(); // Assuming Force magnitude as scalar
         C_start.push_back(C_i);
-        Vector3 Pi = NodeStart.Vector + C_i;
+        Vector3 Pi = startVertex.ReadNodeVector().Vector + C_i;
         controlPoints.push_back(Pi);
         std::cout << "Pi: " << Pi << std::endl;
     }
 
-    // P_(D1+1) = alpha * (N1 + C_(1,D1)) + (1 - alpha) * (N2 + C_(2,D2)) (Equ. 19)
+    // P_(D1+1) = alpha * (N1 + C_(1,D1)) + (1 - alpha) * (N2 - C_(2,D2)) (Equ. 19)
     Vector3 C_end;
-    if (!BearingVectorEnd.empty())
+    const std::vector<BearingVector>& endBearings = endVertex.ReadBearingVectorList();
+    if (!endBearings.empty())
     {
-        const auto& lastBearingEnd = BearingVectorEnd.back();
-        C_end = lastBearingEnd.Vector * lastBearingEnd.Force;
+        const auto& lastBearingEnd = endBearings.back();
+        C_end = lastBearingEnd.Vector * lastBearingEnd.Force.magnitude(); // Assuming Force magnitude as scalar
     }
     else
     {
@@ -124,28 +125,30 @@ std::vector<Vector3> LinearSegment::CalculateControlPoints(float alpha) const
     Vector3 P_D1_plus_1;
     if (!C_start.empty())
     {
-        P_D1_plus_1 = (NodeStart.Vector + C_start.back()) * alpha + (NodeEnd.Vector + C_end) * (1.0f - alpha);
+        P_D1_plus_1 = (startVertex.ReadNodeVector().Vector + C_start.back()) * alpha +
+                      (endVertex.ReadNodeVector().Vector - C_end) * (1.0f - alpha);
     }
     else
     {
-        P_D1_plus_1 = NodeStart.Vector * alpha + (NodeEnd.Vector + C_end) * (1.0f - alpha);
+        P_D1_plus_1 = startVertex.ReadNodeVector().Vector * alpha +
+                      (endVertex.ReadNodeVector().Vector - C_end) * (1.0f - alpha);
     }
     controlPoints.push_back(P_D1_plus_1);
     std::cout << "P_D1_plus_1: " << P_D1_plus_1 << std::endl;
 
     // P_(D1+2) ~ P_n-1 (Equ. 20)
-    for (int j = static_cast<int>(BearingVectorEnd.size()) - 1; j >= 0; --j)
+    for (int j = static_cast<int>(endBearings.size()) - 1; j >= 0; --j)
     {
-        const auto& bearingEnd = BearingVectorEnd[j];
-        Vector3 C_j = bearingEnd.Vector * bearingEnd.Force; // Hadamard product (B_j ⊗ F_j)
-        Vector3 Pj = NodeEnd.Vector + C_j; // Changed '-' to '+' as per comment
+        const auto& bearingEnd = endBearings[j];
+        Vector3 C_j = bearingEnd.Vector * bearingEnd.Force.magnitude(); // Assuming Force magnitude as scalar
+        Vector3 Pj = endVertex.ReadNodeVector().Vector - C_j; // Equ. 19에 따라 수정
         controlPoints.push_back(Pj);
         std::cout << "Pj: " << Pj << std::endl;
     }
 
-    // Pn = N2.Vector (Equ. 21)
-    controlPoints.push_back(NodeEnd.Vector);
-    std::cout << "Pn: " << NodeEnd.Vector << std::endl;
+    // Pn = EndVertex's NodeVector (Equ. 21)
+    controlPoints.push_back(endVertex.ReadNodeVector().Vector);
+    std::cout << "Pn: " << endVertex.ReadNodeVector().Vector << std::endl;
 
     return controlPoints;
 }
@@ -228,22 +231,6 @@ void LinearSegment::SetLOD(int newLOD)
     CreateBSpline();
 }
 
-// Setter for StartNode
-void LinearSegment::SetStartNode(const NodeVector& newStart)
-{
-    NodeStart = newStart;
-    // Automatically perform calculations upon update
-    CreateBSpline();
-}
-
-// Setter for EndNode
-void LinearSegment::SetEndNode(const NodeVector& newEnd)
-{
-    NodeEnd = newEnd;
-    // Automatically perform calculations upon update
-    CreateBSpline();
-}
-
 // Setter for alpha
 void LinearSegment::SetAlpha(float newAlpha)
 {
@@ -263,6 +250,6 @@ void LinearSegment::SetNumSegments(int newNumSegments)
 // Output Operator Overload Definition
 std::ostream& operator<<(std::ostream& os, const LinearSegment& ls)
 {
-    os << "LinearSegment(StartNode: " << ls.getStartNode() << ", EndNode: " << ls.getEndNode() << ")";
+    os << "LinearSegment(StartVertex: " << ls.startVertex << ", EndVertex: " << ls.endVertex << ")";
     return os;
 }
