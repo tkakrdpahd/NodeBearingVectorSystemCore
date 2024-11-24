@@ -19,7 +19,7 @@
 #include "SurfaceSegment.h"
 
 /**
- * @brief SegmentManager; 6 dimension pointer data storage for manage segments.
+ * @brief SegmentManager; 6 dimension pointer array storage for manage segments.
  * 
  * Expected input_01 [int lod, std::vector<NodeVector> NodeVector StartNode, NodeVector EndNode, std::vector<BearingVector> BearingVector StartNodeBearing, EndNodeBearing]
  * Expected input_02 [std::vector<NodeVector> NodeVector node01, NodeVector node02, NodeVector node03 ..., std::vector<BearingVector> BearingVector bearing01, bearing02, bearing03 ...]
