@@ -95,7 +95,7 @@ std::vector<Vector3> LinearSegment::CalculateControlPoints(float alpha) const
 
     // P0 = StartVertex's NodeVector (Equ. 17)
     controlPoints.push_back(startVertex.ReadNodeVector().Vector);
-    std::cout << "P0: " << controlPoints.back() << std::endl;
+    // std::cout << "P0: " << controlPoints.back() << std::endl;
 
     // P1 ~ P_D1 (Equ. 18)
     const std::vector<BearingVector>& startBearings = startVertex.ReadBearingVectorList();
@@ -106,7 +106,7 @@ std::vector<Vector3> LinearSegment::CalculateControlPoints(float alpha) const
         C_start.push_back(C_i);
         Vector3 Pi = startVertex.ReadNodeVector().Vector + C_i;
         controlPoints.push_back(Pi);
-        std::cout << "Pi: " << Pi << std::endl;
+        // std::cout << "Pi: " << Pi << std::endl;
     }
 
     // P_(D1+1) = alpha * (N1 + C_(1,D1)) + (1 - alpha) * (N2 - C_(2,D2)) (Equ. 19)
@@ -134,7 +134,7 @@ std::vector<Vector3> LinearSegment::CalculateControlPoints(float alpha) const
                       (endVertex.ReadNodeVector().Vector - C_end) * (1.0f - alpha);
     }
     controlPoints.push_back(P_D1_plus_1);
-    std::cout << "P_D1_plus_1: " << P_D1_plus_1 << std::endl;
+    // std::cout << "P_D1_plus_1: " << P_D1_plus_1 << std::endl;
 
     // P_(D1+2) ~ P_n-1 (Equ. 20)
     for (int j = static_cast<int>(endBearings.size()) - 1; j >= 0; --j)
@@ -143,12 +143,12 @@ std::vector<Vector3> LinearSegment::CalculateControlPoints(float alpha) const
         Vector3 C_j = bearingEnd.Vector * bearingEnd.Force.magnitude(); // Assuming Force magnitude as scalar
         Vector3 Pj = endVertex.ReadNodeVector().Vector - C_j; // Equ. 19에 따라 수정
         controlPoints.push_back(Pj);
-        std::cout << "Pj: " << Pj << std::endl;
+        // std::cout << "Pj: " << Pj << std::endl;
     }
 
     // Pn = EndVertex's NodeVector (Equ. 21)
     controlPoints.push_back(endVertex.ReadNodeVector().Vector);
-    std::cout << "Pn: " << endVertex.ReadNodeVector().Vector << std::endl;
+    // std::cout << "Pn: " << endVertex.ReadNodeVector().Vector << std::endl;
 
     return controlPoints;
 }
