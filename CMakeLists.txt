@@ -36,6 +36,7 @@ find_package(GTest CONFIG REQUIRED)
 file(GLOB_RECURSE SOURCES
     "modules/*.cpp"
     "services/*.cpp"
+    "server/*.cpp"
 )
 
 # ----------------------------
@@ -51,6 +52,8 @@ target_include_directories(NodeBearingVectorSystemLib PUBLIC
     ${PROJECT_SOURCE_DIR}/modules/vectors
 
     ${PROJECT_SOURCE_DIR}/services/server
+    ${PROJECT_SOURCE_DIR}/services/server/dto
+    ${PROJECT_SOURCE_DIR}/services/server/managers
     ${PROJECT_SOURCE_DIR}/services/managers
 )
 

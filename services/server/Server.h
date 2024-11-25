@@ -7,6 +7,8 @@
 
 #include <drogon/drogon.h>
 
+#include "LinearSegmentDTO.h"
+
 class Server {
 public:
     Server() {
@@ -23,25 +25,25 @@ private:
     void setupRoutes() {
         using namespace drogon;
 
-        // GET /hello 엔드포인트 설정
-        app().registerHandler("/hello",
+        // GET /linearSegment/get 엔드포인트 설정
+        app().registerHandler("/linearSegment/get",
             [](const HttpRequestPtr& req,
                std::function<void(const HttpResponsePtr&)>&& callback) {
                 // 응답 생성
-                auto resp = HttpResponse::newHttpResponse();
-                resp->setBody(std::string("Hello, World!"));
-                callback(resp);
+                // auto resp = HttpResponse::newHttpResponse();
+                // resp->setBody(std::string("Hello, World!"));
+                // callback(resp);
             },
             {Get});
 
         // POST /echo 엔드포인트 설정
-        app().registerHandler("/echo",
+        app().registerHandler("/linearSegment/post",
             [](const HttpRequestPtr& req,
                std::function<void(const HttpResponsePtr&)>&& callback) {
                 // 요청 본문을 그대로 응답으로 반환
-                auto resp = HttpResponse::newHttpResponse();
-                resp->setBody(std::string(req->getBody()));
-                callback(resp);
+                // auto resp = HttpResponse::newHttpResponse();
+                // resp->setBody(std::string(req->getBody()));
+                // callback(resp);
             },
             {Post});
     }
