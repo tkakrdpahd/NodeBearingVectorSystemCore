@@ -8,7 +8,7 @@ add_executable(test_nodebearingvectorsystem
   modules/entities/Vector3Test.cc
   modules/entities/NodeVectorTest.cc
   modules/entities/BearingVectorTest.cc
-  modules/operators/Vertex.cc
+  modules/operators/VertexTest.cc
   modules/operators/CoordinateConverterTest.cc
   modules/segments/LinearSegmentTest.cc
 )
