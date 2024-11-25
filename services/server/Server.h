@@ -7,6 +7,7 @@
 
 #include <drogon/drogon.h>
 
+#include "LinearSegment.h"
 #include "LinearSegmentDTO.h"
 
 class Server {
@@ -33,6 +34,12 @@ private:
                 // auto resp = HttpResponse::newHttpResponse();
                 // resp->setBody(std::string("Hello, World!"));
                 // callback(resp);
+
+                // Get data;
+                // Return to LinearSegmentDTO.h;
+                // Get Struct from LinearSegmentDTO.h;
+                // Return to Data handler LinearSegment.h;
+                // Return data from LinearSegment.h;
             },
             {Get});
 
