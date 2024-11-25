@@ -11,13 +11,26 @@
                     "vec": [0.0, 0.0, 0.0]
                 }
             }
+        },
+        "vertex2": {
+            "node": {
+                    "index": 0,
+                    "vec":[0.0, 0.0, 0.0]
+            },
+            "bearings": {
+                "bearing1": {
+                    "force": [0.0, 0.0, 0.0],
+                    "vec": [0.0, 0.0, 0.0]
+                }
+            }
         }
     },
     "expected_output": {
         "polygon_vertexs": {
             "vertex1": [0.0, 0.0, 0.0],
             "vertex2": [0.0, 0.0, 0.0],
-            "vertex3": [0.0, 0.0, 0.0]
+            "vertex3": [0.0, 0.0, 0.0],
+            "...": []
         }
     }
 }

@@ -5,6 +5,8 @@
 #ifndef SERVERMANAGER_H
 #define SERVERMANAGER_H
 
+#include <drogon/drogon.h>
+
 #include "SocketManager.h"
 #include "RoutesManager.h"
 
@@ -16,14 +18,5 @@ public:
     ServerManager(/* args */);
     ~ServerManager();
 };
-
-ServerManager::ServerManager(/* args */)
-{
-}
-
-ServerManager::~ServerManager()
-{
-}
-
 
 #endif // SERVERMANAGER_H
