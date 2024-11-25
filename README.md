@@ -2,58 +2,6 @@
 
 NodeBearingVectorSystem is a modular and extensible library designed to handle vector-based computations, including basic 3D vector operations, node vector management, and bearing vector control.
 
-## Components
-
-### 1. **Vector3**
-`Vector3` is the fundamental data structure for representing 3D vectors. It is used as the base component for `NodeVector` and `BearingVector`.
-
-#### Properties:
-- `float x, y, z`: Cartesian coordinates of the vector.
-
-#### Constructor:
-```cpp
-Vector3(float x, float y, float z);
-```
-
-### 2. **NodeVector**
-`NodeVector` acts similarly to a vertex, combining an index with a `Vector3` to represent a specific point in space.
-
-#### Properties:
-- `int index`: A unique identifier for the node.
-- `Vector3 vec`: The vector representing the node's position.
-
-#### Constructor:
-```cpp
-NodeVector(int index, const Vector3& vec);
-```
-
-### 3. **BearingVector**
-`BearingVector` is used to define control points with additional forces and directional vectors.
-
-#### Properties:
-- `NodeVector node`: The associated node for the bearing vector.
-- `Vector3 force`: The force vector applied to the node.
-- `Vector3 vec`: The directional vector for the bearing.
-
-#### Constructor:
-```cpp
-BearingVector(const NodeVector& node, const Vector3& force, const Vector3& vec);
-```
-
-## Managers
-### ObjectManager
-#### ERD
-![ObjectManager ERD](./img/ObjectManagerERD.svg)
-
-### SceneManager
-#### ERD
-
-### ServerManager
-#### ERD
-
-## Flow
-### ERD
-
 ## License
 This project is dual-licensed under the following terms:
 

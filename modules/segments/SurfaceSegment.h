@@ -28,15 +28,13 @@
 #include <vector>
 #include <memory>
 
-#include "Vector3.h"
-#include "NodeVector.h"
-#include "BearingVector.h"
+#include "Vertex.h"
 #include "LinearSegment.h"
 
 /**
  * @brief SurfaceSegment class
  * 
- * Expected input [std::vector<NodeVector> NodeVector node01, NodeVector node02, NodeVector node03 ..., std::vector<BearingVector> BearingVector bearing01, bearing02, bearing03 ...]
+ * Expected input [std::vector<Vertex> vertex1, vertex2, vertex3, ...]
  */
 class SurfaceSegment
 {
