@@ -4,7 +4,7 @@
  * Security: Confidential
  * Author: Minseok Doo
  * Date: Oct 7, 2024
- * Last Modified: Nov 11, 2024
+ * Last Modified: Nov 25, 2024
  * 
  * Purpose of Class:
  * Purpose: Index buffer for LinearSegment and Surface
@@ -39,9 +39,11 @@
 class SurfaceSegment
 {
 private:
-    /* data */
+    int index;
+    std::vector<Vertex> _vertexs;
+    std::unique_ptr<std::vector<Vertex>> _surfaceSegment;
 public:
-    void CreateLinearSegment(); // Seperate node/bearing vector input as linearSegment.
+    void CreateLinearSegment(); // Create LinearSegment from LinearSegment.h
     void GetLinearSegmentCache();
     void CreateSurfaceVectors();
 
