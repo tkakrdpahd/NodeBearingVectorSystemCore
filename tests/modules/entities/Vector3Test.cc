@@ -123,3 +123,18 @@ TEST(Vector3Test, ScalarMultiplicationLeft) {
     EXPECT_FLOAT_EQ(result.z, 6.0f);
 }
 
+TEST(Vector3Test, Serialization) {
+    Vector3 v(1.0f, 2.0f, 3.0f);
+    json j = v.toJson();
+    EXPECT_FLOAT_EQ(j["x"], 1.0f);
+    EXPECT_FLOAT_EQ(j["y"], 2.0f);
+    EXPECT_FLOAT_EQ(j["z"], 3.0f);
+}
+
+TEST(Vector3Test, Deserialization) {
+    json j = { {"x", 4.0f}, {"y", 5.0f}, {"z", 6.0f} };
+    Vector3 v = Vector3::fromJson(j);
+    EXPECT_FLOAT_EQ(v.x, 4.0f);
+    EXPECT_FLOAT_EQ(v.y, 5.0f);
+    EXPECT_FLOAT_EQ(v.z, 6.0f);
+}

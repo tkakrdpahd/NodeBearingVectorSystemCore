@@ -1,5 +1,6 @@
 /**
  * Vector3.h
+ * Linked File: Vector3.cpp
  * Security: Confidential
  * Author: Minseok Doo
  * Created Date: Oct 24, 2024
@@ -10,7 +11,10 @@
 #define VECTOR3_H
 
 #include <iostream>
-#include <cmath> // sqrt, abs
+
+// Json
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 class Vector3 {
 public:
@@ -21,126 +25,65 @@ public:
         };
     };
 
+    // JSON Serialization
+    json toJson() const;
+    static Vector3 fromJson(const json& j);
+
     // Default and parameterized constructor
-    Vector3(float xVal = 0.0f, float yVal = 0.0f, float zVal = 0.0f) {
-        values[0] = xVal;
-        values[1] = yVal;
-        values[2] = zVal;
-    }
+    Vector3(float xVal = 0.0f, float yVal = 0.0f, float zVal = 0.0f);
 
     // Overloaded output operator
-    friend std::ostream& operator<<(std::ostream& os, const Vector3& vec) {
-        os << "(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
-        return os;
-    }
+    friend std::ostream& operator<<(std::ostream& os, const Vector3& vec);
 
     // Vector addition
-    Vector3 operator+(const Vector3& v) const {
-        return Vector3(x + v.x, y + v.y, z + v.z);
-    }
-
-    Vector3& operator+=(const Vector3& v) {
-        x += v.x; y += v.y; z += v.z;
-        return *this;
-    }
+    Vector3 operator+(const Vector3& v) const;
+    Vector3& operator+=(const Vector3& v);
 
     // Vector subtraction
-    Vector3 operator-(const Vector3& v) const {
-        return Vector3(x - v.x, y - v.y, z - v.z);
-    }
-
-    Vector3& operator-=(const Vector3& v) {
-        x -= v.x; y -= v.y; z -= v.z;
-        return *this;
-    }
+    Vector3 operator-(const Vector3& v) const;
+    Vector3& operator-=(const Vector3& v);
 
     // Scalar multiplication (Vector3 * float)
-    Vector3 operator*(float scalar) const {
-        return Vector3(x * scalar, y * scalar, z * scalar);
-    }
-
-    Vector3& operator*=(float scalar) {
-        x *= scalar; y *= scalar; z *= scalar;
-        return *this;
-    }
+    Vector3 operator*(float scalar) const;
+    Vector3& operator*=(float scalar);
 
     // Hadamard product (Vector3 * Vector3)
-    Vector3 operator*(const Vector3& v) const {
-        return Vector3(x * v.x, y * v.y, z * v.z);
-    }
+    Vector3 operator*(const Vector3& v) const;
 
     // Scalar division
-    Vector3 operator/(float scalar) const {
-        return Vector3(x / scalar, y / scalar, z / scalar);
-    }
-
-    Vector3& operator/=(float scalar) {
-        x /= scalar; y /= scalar; z /= scalar;
-        return *this;
-    }
+    Vector3 operator/(float scalar) const;
+    Vector3& operator/=(float scalar);
 
     // Equality operator
-    bool operator==(const Vector3& other) const {
-        return std::abs(x - other.x) < 1e-5f &&
-               std::abs(y - other.y) < 1e-5f &&
-               std::abs(z - other.z) < 1e-5f;
-    }
+    bool operator==(const Vector3& other) const;
 
     // Inequality operator
-    bool operator!=(const Vector3& other) const {
-        return !(*this == other);
-    }
+    bool operator!=(const Vector3& other) const;
 
     // Dot product
-    float dot(const Vector3& v) const {
-        return x * v.x + y * v.y + z * v.z;
-    }
+    float dot(const Vector3& v) const;
 
     // Cross product
-    Vector3 cross(const Vector3& v) const {
-        return Vector3(
-            y * v.z - z * v.y,
-            z * v.x - x * v.z,
-            x * v.y - y * v.x
-        );
-    }
+    Vector3 cross(const Vector3& v) const;
 
     // Vector magnitude
-    float magnitude() const {
-        return std::sqrt(x * x + y * y + z * z);
-    }
+    float magnitude() const;
 
     // Normalize the vector
-    Vector3 normalized() const {
-        float mag = magnitude();
-        if (mag == 0.0f)
-            return Vector3(0.0f, 0.0f, 0.0f);
-        return *this / mag;
-    }
+    Vector3 normalized() const;
 
     // Check if the vector is zero
-    bool isZero() const {
-        return std::abs(x) < 1e-5f && std::abs(y) < 1e-5f && std::abs(z) < 1e-5f;
-    }
+    bool isZero() const;
 
     // Distance between two vectors
-    float distance(const Vector3& v) const {
-        return (*this - v).magnitude();
-    }
+    float distance(const Vector3& v) const;
 
     // Friend function for scalar multiplication (float * Vector3)
-    friend Vector3 operator*(float scalar, const Vector3& v) {
-        return Vector3(v.x * scalar, v.y * scalar, v.z * scalar);
-    }
+    friend Vector3 operator*(float scalar, const Vector3& v);
 
     // Access individual elements via operator[]
-    float operator[](int index) const {
-        return values[index];
-    }
-
-    float& operator[](int index) {
-        return values[index];
-    }
+    float operator[](int index) const;
+    float& operator[](int index);
 };
 
 #endif // VECTOR3_H
