@@ -10,6 +10,10 @@
 #ifndef NODEVECTOR_H
 #define NODEVECTOR_H
 
+// Json
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 #include "Vector3.h"
 
 /**
@@ -25,6 +29,10 @@ struct NodeVector
 
     // (int, Vector3) constructor
     NodeVector(int nodeId, const Vector3& vec) : Index(nodeId), Vector(vec) {}
+
+    // JSON Serialization
+    json toJson() const;
+    static NodeVector fromJson(const json& j);
 
     // 출력 연산자 오버로드
     friend std::ostream& operator<<(std::ostream& os, const NodeVector& nv) {

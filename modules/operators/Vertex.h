@@ -5,6 +5,11 @@
 #include <vector>
 #include <memory>
 #include <ostream>
+
+// Json
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 // Google Test Access
 #include <gtest/gtest_prod.h>
 
@@ -58,6 +63,10 @@ public:
     const NodeVector& ReadNodeVector() const { return *(_node); }
     const std::vector<BearingVector>& ReadBearingVectorList() const { return *(_bearingVectorList); }
 
+    // JSON Serialization
+    json toJson() const;
+    static Vertex fromJson(const json& j);
+    
     // Output Operator Overload Declaration
     friend std::ostream& operator<<(std::ostream& os, const Vertex& vertex);
 };

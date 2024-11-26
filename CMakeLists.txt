@@ -51,9 +51,12 @@ target_include_directories(NodeBearingVectorSystemLib PUBLIC
     ${PROJECT_SOURCE_DIR}/modules/segments
     ${PROJECT_SOURCE_DIR}/modules/vectors
 
+    ${PROJECT_SOURCE_DIR}/services/process
+    ${PROJECT_SOURCE_DIR}/services/interface
     ${PROJECT_SOURCE_DIR}/services/managers
 
-    ${PROJECT_SOURCE_DIR}/server    
+    ${PROJECT_SOURCE_DIR}/server
+    ${PROJECT_SOURCE_DIR}/server/api
     ${PROJECT_SOURCE_DIR}/server/dto
     ${PROJECT_SOURCE_DIR}/server/managers
 )

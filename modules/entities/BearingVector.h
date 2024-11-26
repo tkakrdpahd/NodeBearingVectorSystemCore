@@ -19,6 +19,10 @@
 #ifndef BEARINGVECTOR_H
 #define BEARINGVECTOR_H
 
+// Json
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 #include "Vector3.h"
 #include "NodeVector.h"
 
@@ -39,6 +43,10 @@ struct BearingVector
     BearingVector(const NodeVector& node, const Vector3& force, const Vector3& vec) 
         : Node(node), Force(force), Vector(vec) {}
 
+    // JSON Serialization
+    json toJson() const;
+    static BearingVector fromJson(const json& j);
+    
     // 출력 연산자 오버로드
     friend std::ostream& operator<<(std::ostream& os, const BearingVector& bv) {
         os << "BearingVector(Node: " << bv.Node << ", Force: " << bv.Force << ", Vector: " << bv.Vector << ")";
