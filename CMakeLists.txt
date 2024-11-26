@@ -34,9 +34,9 @@ find_package(GTest CONFIG REQUIRED)
 # Collect source files
 # ----------------------------
 file(GLOB_RECURSE SOURCES
-    "modules/*.cpp"
-    "services/*.cpp"
-    "server/*.cpp"
+    "src/modules/*.cpp"
+    "src/services/*.cpp"
+    "src/server/*.cpp"
 )
 
 # ----------------------------
@@ -46,19 +46,19 @@ add_library(NodeBearingVectorSystemLib STATIC ${SOURCES})
 
 # Set header file paths
 target_include_directories(NodeBearingVectorSystemLib PUBLIC
-    ${PROJECT_SOURCE_DIR}/modules/entities
-    ${PROJECT_SOURCE_DIR}/modules/operators
-    ${PROJECT_SOURCE_DIR}/modules/segments
-    ${PROJECT_SOURCE_DIR}/modules/vectors
+    ${PROJECT_SOURCE_DIR}/src/modules/entities
+    ${PROJECT_SOURCE_DIR}/src/modules/operators
+    ${PROJECT_SOURCE_DIR}/src/modules/segments
+    ${PROJECT_SOURCE_DIR}/src/modules/vectors
 
-    ${PROJECT_SOURCE_DIR}/services/process
-    ${PROJECT_SOURCE_DIR}/services/interface
-    ${PROJECT_SOURCE_DIR}/services/managers
+    ${PROJECT_SOURCE_DIR}/src/services/process
+    ${PROJECT_SOURCE_DIR}/src/services/interface
+    ${PROJECT_SOURCE_DIR}/src/services/managers
 
-    ${PROJECT_SOURCE_DIR}/server
-    ${PROJECT_SOURCE_DIR}/server/api
-    ${PROJECT_SOURCE_DIR}/server/dto
-    ${PROJECT_SOURCE_DIR}/server/managers
+    ${PROJECT_SOURCE_DIR}/src/server
+    ${PROJECT_SOURCE_DIR}/src/server/api
+    ${PROJECT_SOURCE_DIR}/src/server/dto
+    ${PROJECT_SOURCE_DIR}/src/server/managers
 )
 
 # Set link libraries
@@ -96,7 +96,7 @@ endif()
 # ----------------------------
 # Add executable
 # ----------------------------
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp)
 
 # Link library to the main executable
 target_link_libraries(${PROJECT_NAME} PRIVATE NodeBearingVectorSystemLib)
