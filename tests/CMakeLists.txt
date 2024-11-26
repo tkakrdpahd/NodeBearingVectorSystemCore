@@ -11,6 +11,7 @@ add_executable(test_nodebearingvectorsystem
   modules/operators/VertexTest.cc
   modules/operators/CoordinateConverterTest.cc
   modules/segments/LinearSegmentTest.cc
+  server/managers/SocketManagerTest.cc
 )
 
 # Include directories
