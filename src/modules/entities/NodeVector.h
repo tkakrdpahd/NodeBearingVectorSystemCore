@@ -31,8 +31,19 @@ struct NodeVector
     NodeVector(int nodeId, const Vector3& vec) : Index(nodeId), Vector(vec) {}
 
     // JSON Serialization
-    json toJson() const;
-    static NodeVector fromJson(const json& j);
+    json toJson() const {
+        return {
+            {"index", Index},
+            {"vector", Vector.toJson()}
+        };
+    }
+
+    static NodeVector fromJson(const json& j) {
+        return NodeVector(
+            j["index"].get<int>(),
+            Vector3::fromJson(j["vector"])
+        );
+    }
 
     // 출력 연산자 오버로드
     friend std::ostream& operator<<(std::ostream& os, const NodeVector& nv) {
