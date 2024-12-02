@@ -1,4 +1,6 @@
-Software License Agreement
+                       Software License Agreement
+                       Version 1, 4 December 2024
+
 This Software License Agreement (this "Agreement"), effective as of [DATE] (the "Effective Date"), is by and between [ LICENSOR NAME], a [STATE OF ORGANIZATION] [ENTITY TYPE] with offices located at [ADDRESS] ("Licensor") and [LICENSEE NAME], a [STATE OF ORGANIZATION] [ENTITY TYPE] with offices located at [ADDRESS] ("Licensee"). Licensor and Licensee may be referred to herein collectively as the "Parties" or individually as a "Party." 
 WHEREAS, Licensor desires to license the Software described in Exhibit A attached hereto to Licensee; and
 WHEREAS, Licensee desires to obtain a license to use the Software for its internal business purposes, subject to the terms and conditions of this Agreement.
