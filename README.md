@@ -10,7 +10,7 @@ This project is dual-licensed under the following terms:
 - A copy of the GPL 3.0 license is included in `LICENSE-GPLv3.txt`.
 
 ### 2. **Commercial License**
-- For commercial use, you must obtain a commercial license.
+- For commercial use, you may be obtain a commercial license.
 - Details of the commercial license are included in `LICENSE-Commercial.txt`.
 
 For further licensing inquiries, please contact us directly.
