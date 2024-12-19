@@ -2,19 +2,6 @@
 
 NodeBearingVectorSystem is a modular and extensible library designed to handle vector-based computations, including basic 3D vector operations, node vector management, and bearing vector control.
 
-## License
-This project is dual-licensed under the following terms:
-
-### 1. **GNU General Public License v3.0 (GPL 3.0)**
-- Redistribution and modification are permitted under the terms of the GPL 3.0, as published by the Free Software Foundation.
-- A copy of the GPL 3.0 license is included in `LICENSE-GPLv3.txt`.
-
-### 2. **Commercial License**
-- For commercial use, you may be obtain a commercial license.
-- Details of the commercial license are included in `LICENSE-Commercial.txt`.
-
-For further licensing inquiries, please contact us directly.
-
 ## Build and Test
 
 ### Prerequisites
